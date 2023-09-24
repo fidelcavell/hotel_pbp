@@ -7,15 +7,21 @@ class HomeGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MasonryGridView.builder(
-      itemCount: 12,
-      gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2),
-      itemBuilder: (context, index) => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Image.asset('lib/images/hotel${index + 1}.jpg'),
+    return MaterialApp(
+      home: Scaffold(
+        body: MasonryGridView.builder(
+          itemCount: 12,
+          gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2),
+          itemBuilder: (context, index) => GestureDetector(
+            onTap: () => Image.asset('lib/images/hotel${index}.jpg', scale: 3),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset('lib/images/hotel${index + 1}.jpg')),
+            ),
+          ),
         ),
       ),
     );
@@ -29,8 +35,8 @@ class HomeView extends StatefulWidget {
   _HomeViewState createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView>  with SingleTickerProviderStateMixin{
-  
+class _HomeViewState extends State<HomeView>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _selectedColor = Color(0xff1a73e8);
   final _unselectedColor = Color(0xff5f6368);
@@ -46,13 +52,13 @@ class _HomeViewState extends State<HomeView>  with SingleTickerProviderStateMixi
     _tabController = TabController(length: 3, vsync: this);
     super.initState();
   }
-  
+
   @override
   void dispose() {
     super.dispose();
     _tabController.dispose();
   }
-  
+
   @override
   Widget build(BuildContext) {
     return Scaffold(
@@ -75,16 +81,15 @@ class _HomeViewState extends State<HomeView>  with SingleTickerProviderStateMixi
               ),
             ),
           ]
-
-          .map((item) => Column(
-            children: [
-              item,
-              Divider(
-                color: Colors.transparent,
-              )
-            ],
-          ))
-          .toList(),
+              .map((item) => Column(
+                    children: [
+                      item,
+                      Divider(
+                        color: Colors.transparent,
+                      )
+                    ],
+                  ))
+              .toList(),
         ),
       ),
     );

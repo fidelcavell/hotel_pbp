@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'material_indicator_design.dart';
+//import 'material_indicator_design.dart';
 
 class HomeGridView extends StatelessWidget {
   const HomeGridView({super.key});
@@ -34,10 +34,11 @@ class _HomeViewState extends State<HomeView>  with SingleTickerProviderStateMixi
   late TabController _tabController;
   final _selectedColor = Color(0xff1a73e8);
   final _unselectedColor = Color(0xff5f6368);
-  final _tabs =[
-    Tab(text: 'Tab 1'),
-    Tab(text: 'Tab 2'),
-    Tab(text: 'Tab 3'),
+
+  final _iconTabs = [
+    Tab(icon: Icon(Icons.chat)),
+    Tab(icon: Icon(Icons.call)),
+    Tab(icon: Icon(Icons.settings)),
   ];
 
   @override
@@ -63,22 +64,16 @@ class _HomeViewState extends State<HomeView>  with SingleTickerProviderStateMixi
         padding: const EdgeInsets.all(8.0),
         child: ListView(
           children: [
-            Container(
-              height: kToolbarHeight - 8.0,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: TabBar(
+            TabBar(
               controller: _tabController,
+              tabs: _iconTabs,
+              unselectedLabelColor: Colors.black,
               labelColor: _selectedColor,
-              unselectedLabelColor: _unselectedColor,
-              indicatorSize: TabBarIndicatorSize.label,
-              indicator: MaterialDesignIndicator(
-                  indicatorHeight: 4, indicatorColor: _selectedColor),
-              tabs: _tabs,
+              indicator: BoxDecoration(
+                borderRadius: BorderRadius.circular(80.0),
+                color: _selectedColor.withOpacity(0.2),
+              ),
             ),
-            )
           ]
 
           .map((item) => Column(

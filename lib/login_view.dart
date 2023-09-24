@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hotel_pbp/components/form_component.dart';
 import 'package:hotel_pbp/main.dart';
 import 'package:hotel_pbp/register_view.dart';
-import 'package:hotel_pbp/home_grid.dart';
+import 'package:hotel_pbp/home_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({this.data, super.key});
@@ -16,7 +16,7 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
-  
+
   bool _showPassword = true;
 
   @override
@@ -50,7 +50,7 @@ class _LoginViewState extends State<LoginView> {
                   width: 350,
                   child: TextField(
                     controller: passwordController,
-                    obscureText: !_showPassword,
+                    obscureText: _showPassword,
                     autofocus: true,
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(),
@@ -63,11 +63,6 @@ class _LoginViewState extends State<LoginView> {
                               ? Icons.visibility_off
                               : Icons.visibility,
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _showPassword = !_showPassword;
-                          });
-                        }
                       ),
                     ),
                   ),
@@ -86,8 +81,7 @@ class _LoginViewState extends State<LoginView> {
                             dataForm['password'] == passwordController.text) {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (_) => const HomeGridView()),
+                            MaterialPageRoute(builder: (_) => const HomeView()),
                           );
                         } else {
                           showDialog(
@@ -147,7 +141,7 @@ class _LoginViewState extends State<LoginView> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => const RegisterView(), //register
+        builder: (_) => const RegisterView(),
       ),
     );
   }
@@ -156,9 +150,5 @@ class _LoginViewState extends State<LoginView> {
     setState(() {
       _showPassword = !_showPassword;
     });
-  }
-
-  void initState() {
-    _showPassword = false;
   }
 }

@@ -11,9 +11,9 @@ class HomeGridView extends StatefulWidget {
 
 class _HomeGridViewState extends State<HomeGridView> {
   final int _cells = 12;
-  final double _containerSizeSmall = 100;
+  final double _containerSizeSmall = 110;
   final double _containerSizeLarge = 250;
-  final double _padding = 4;
+  final double _padding = 8;
   int _clicked = 0;
 
   final List<String> _imagePaths = [
@@ -57,13 +57,11 @@ class _HomeGridViewState extends State<HomeGridView> {
                       : _containerSizeSmall,
                   child: _clicked == col + 1
                       ? Image.asset(
-                          _imagePaths[col %
-                              _imagePaths.length], // Use images cyclically
+                          _imagePaths[col % _imagePaths.length],
                         )
                       : Center(
                           child: Image.asset(
-                            _imagePaths[col %
-                                _imagePaths.length], // Use images cyclically
+                            _imagePaths[col % _imagePaths.length],
                           ),
                         ),
                 ),

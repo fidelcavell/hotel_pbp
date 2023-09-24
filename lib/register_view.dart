@@ -1,25 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_pbp/component/form_component.dart';
-import 'package:hotel_pbp/View/login_view.dart';
+import 'package:intl/intl.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: RegisterView(),
-    );
-  }
-}
+import 'package:hotel_pbp/components/form_component.dart';
+import 'package:hotel_pbp/login_view.dart';
 
 class RegisterView extends StatefulWidget {
-  const RegisterView({Key? key});
+  const RegisterView({super.key});
 
   @override
-  _RegisterViewState createState() => _RegisterViewState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
 class _RegisterViewState extends State<RegisterView> {
@@ -28,163 +17,219 @@ class _RegisterViewState extends State<RegisterView> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController notelpController = TextEditingController();
-
-  bool _obscurePassword =
-      true; // Variabel untuk mengatur apakah password tersembunyi
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              inputForm((p0) {
-                if (p0 == null || p0.isEmpty) {
-                  return 'Username Tidak Boleh Kosong';
-                }
-                if (p0.toLowerCase() == 'anjing') {
-                  return "Tidak Boleh Menggunakan kata kasar";
-                }
-                return null;
-              },
-                  controller: usernameController,
-                  hintTxt: "Username",
-                  helperTxt: "Ucup Serucup",
-                  iconData: Icons.person),
-              inputForm(((p0) {
-                if (p0 == null || p0.isEmpty) {
-                  return 'Email Tidak Boleh Kosong';
-                }
-                if (!p0.contains('@')) {
-                  return 'Email harus menggunakan @';
-                }
-                return null;
-              }),
-                  controller: emailController,
-                  hintTxt: "Email",
-                  helperTxt: "ucup@gmail.com",
-                  iconData: Icons.email),
-              TextFormField(
-                controller: passwordController,
-                obscureText:
-                    _obscurePassword, // Menyembunyikan atau menampilkan password
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  hintText: 'xxxxxxx',
-                  icon: Icon(Icons.password),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Password tidak boleh kosong';
-                  }
-                  if (value.length < 5) {
-                    return 'Password minimal 5 digit';
-                  }
-                  return null;
-                },
-              ),
-              inputForm(((p0) {
-                if (p0 == null || p0.isEmpty) {
-                  return 'Nomor telepon tidak Boleh kosong';
-                }
-                return null;
-              }),
-                  controller: notelpController,
-                  hintTxt: "No Telp",
-                  helperTxt: "08216734894",
-                  iconData: Icons.phone_android),
-              ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Map<String, dynamic> formData = {};
-                      formData['username'] = usernameController.text;
-                      formData['password'] = passwordController.text;
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => LoginView(
-                            data: formData,
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text('Register'))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class inputForm extends StatelessWidget {
-  final String? Function(String?) validator;
-  final TextEditingController controller;
-  final String hintTxt;
-  final String helperTxt;
-  final IconData iconData;
-
-  inputForm(
-    this.validator, {
-    Key? key,
-    required this.controller,
-    required this.hintTxt,
-    required this.helperTxt,
-    required this.iconData,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: hintTxt,
-          hintText: helperTxt,
-          icon: Icon(iconData),
-        ),
-        validator: validator,
-      ),
-    );
-  }
-}
-
-class LoginView extends StatelessWidget {
-  final Map<String, dynamic> data;
-
-  const LoginView({Key? key, required this.data}) : super(key: key);
+  TextEditingController dateController = TextEditingController();
+  String? _gender;
+  bool? checkbox1 = false;
+  bool? checkbox2 = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login View'),
+        title: const Text('Registration'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Username: ${data['username']}'),
-            Text('Password: ${data['password']}'),
-          ],
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20),
+                  inputForm((p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Username Tidak Boleh Kosong';
+                    }
+                    if (p0.toLowerCase() == 'anjing') {
+                      return "Tidak Boleh Menggunakan kata kasar";
+                    }
+                    return null;
+                  },
+                      controller: usernameController,
+                      hintTxt: "Username",
+                      helperTxt: "",
+                      iconData: Icons.person),
+                  inputForm(((p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Email Tidak Boleh Kosong';
+                    }
+                    if (!p0.contains('@')) {
+                      return 'Email harus menggunakan @';
+                    }
+                    return null;
+                  }),
+                      controller: emailController,
+                      hintTxt: "Email",
+                      helperTxt: "",
+                      iconData: Icons.email),
+                  inputForm(((p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Password tidak boleh kosong';
+                    }
+
+                    if (p0.length < 5) {
+                      return 'Password minimal 5 digit';
+                    }
+                    return null;
+                  }),
+                      controller: passwordController,
+                      hintTxt: 'Password',
+                      helperTxt: '',
+                      iconData: Icons.password,
+                      password: true),
+                  inputForm(((p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Nomor telepon tidak Boleh kosong';
+                    }
+                    return null;
+                  }),
+                      controller: notelpController,
+                      hintTxt: "No Telp",
+                      helperTxt: "",
+                      iconData: Icons.phone_android),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: SizedBox(
+                      width: 350,
+                      child: TextFormField(
+                        controller: dateController,
+                        autofocus: true,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'Birth Date',
+                          prefixIcon: Icon(Icons.calendar_today),
+                        ),
+                        readOnly: true,
+                        onTap: () async {
+                          DateTime? datePicker = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2025),
+                          );
+                          if (datePicker != null) {
+                            String formattedDate =
+                                DateFormat('dd-MM-yyyy').format(datePicker);
+                            setState(() {
+                              dateController.text = formattedDate.toString();
+                            });
+                          } else {
+                            // ????
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 10, top: 10),
+                    child: Row(
+                      children: [
+                        Row(
+                          children: [
+                            Radio(
+                              value: 'Male',
+                              groupValue: _gender,
+                              onChanged: (value) {
+                                setState(() {
+                                  _gender = value;
+                                });
+                              },
+                            ),
+                            const Text('Male'),
+                          ],
+                        ),
+                        const SizedBox(width: 40),
+                        Row(
+                          children: [
+                            Radio(
+                              value: 'Female',
+                              groupValue: _gender,
+                              onChanged: (value) {
+                                setState(() {
+                                  _gender = value;
+                                });
+                              },
+                            ),
+                            const Text('Female'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: checkbox1,
+                              onChanged: (value) {
+                                setState(() {
+                                  checkbox1 = value;
+                                });
+                              },
+                            ),
+                            const Text('Travel'),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: checkbox2,
+                              onChanged: (value) {
+                                setState(() {
+                                  checkbox2 = value;
+                                });
+                              },
+                            ),
+                            const Text('Business'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        Map<String, dynamic> formData = {};
+                        formData['username'] = usernameController.text;
+                        formData['password'] = passwordController.text;
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Information'),
+                            content: const Text('Account has been created'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => LoginView(
+                                        data: formData,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(14),
+                                  child: const Text("Continue"),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text('Register'),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

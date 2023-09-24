@@ -16,6 +16,7 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
+  
   bool _showPassword = true;
 
   @override
@@ -49,7 +50,7 @@ class _LoginViewState extends State<LoginView> {
                   width: 350,
                   child: TextField(
                     controller: passwordController,
-                    obscureText: _showPassword,
+                    obscureText: !_showPassword,
                     autofocus: true,
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(),
@@ -62,6 +63,11 @@ class _LoginViewState extends State<LoginView> {
                               ? Icons.visibility_off
                               : Icons.visibility,
                         ),
+                        onPressed: () {
+                          setState(() {
+                            _showPassword = !_showPassword;
+                          });
+                        }
                       ),
                     ),
                   ),
@@ -150,5 +156,9 @@ class _LoginViewState extends State<LoginView> {
     setState(() {
       _showPassword = !_showPassword;
     });
+  }
+
+  void initState() {
+    _showPassword = false;
   }
 }

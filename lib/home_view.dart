@@ -41,32 +41,18 @@ class _HomeViewState extends State<HomeView>
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: ListView(
-          children: [
-            TabBar(
-              controller: _tabController,
-              tabs: _iconTabs,
-              unselectedLabelColor: Colors.black,
-              labelColor: _selectedColor,
-              indicator: BoxDecoration(
-                borderRadius: BorderRadius.circular(80.0),
-                color: _selectedColor.withOpacity(0.2),
-              ),
-              onTap: (value) {
-                
-              },
+        child: ListView(children: [
+          TabBar(
+            controller: _tabController,
+            tabs: _iconTabs,
+            unselectedLabelColor: Colors.black,
+            labelColor: _selectedColor,
+            indicator: BoxDecoration(
+              borderRadius: BorderRadius.circular(80.0),
+              color: _selectedColor.withOpacity(0.2),
             ),
-          ]
-              .map((item) => Column(
-                    children: [
-                      item,
-                      const Divider(
-                        color: Colors.transparent,
-                      )
-                    ],
-                  ))
-              .toList(),
-        ),
+          ),
+        ]),
       ),
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:hotel_pbp/components/form_component.dart';
-import 'package:hotel_pbp/main.dart';
 import 'package:hotel_pbp/register_view.dart';
 import 'package:hotel_pbp/home_view.dart';
 
@@ -13,6 +12,8 @@ class LoginView extends StatefulWidget {
   @override
   State<LoginView> createState() => _LoginViewState();
 }
+
+var themeMode = false;
 
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
@@ -44,30 +45,25 @@ class _LoginViewState extends State<LoginView> {
                   helperTxt: 'Inputkan User yang telah didaftar',
                   iconData: Icons.person),
               // Password :
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: SizedBox(
-                  width: 350,
-                  child: TextField(
-                    controller: passwordController,
-                    obscureText: _showPassword,
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: 'Password',
-                      prefixIcon: const Icon(Icons.password),
-                      suffixIcon: IconButton(
-                        onPressed: passwordVisibility,
-                        icon: Icon(
-                          _showPassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              inputForm((p0) {
+                if (p0 == null || p0.isEmpty) {
+                  return 'Password tidak boleh kosong';
+                }
+                return null;
+              }, onChanged: (p0) {
+                
+              },
+                  controller: passwordController,
+                  obscureText: _showPassword,
+                  hintTxt: 'Password',
+                  helperTxt: 'Inputkan Password yang telah didaftar',
+                  iconData: Icons.password,
+                  togglePassword: GestureDetector(
+                    onTap: passwordVisibility,
+                    child: Icon(_showPassword
+                        ? Icons.visibility_off
+                        : Icons.visibility),
+                  )),
               const SizedBox(height: 20),
               // Row contain login's button and Register's button :
               Row(

@@ -77,7 +77,7 @@ class _RegisterViewState extends State<RegisterView> {
                       hintTxt: 'Password',
                       helperTxt: '',
                       iconData: Icons.password,
-                      password: true),
+                      obscureText: true),
                   inputForm(((p0) {
                     if (p0 == null || p0.isEmpty) {
                       return 'Nomor telepon tidak Boleh kosong';
@@ -88,38 +88,35 @@ class _RegisterViewState extends State<RegisterView> {
                       hintTxt: "No Telp",
                       helperTxt: "",
                       iconData: Icons.phone_android),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: SizedBox(
-                      width: 350,
-                      child: TextFormField(
-                        controller: dateController,
-                        autofocus: true,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Birth Date',
-                          prefixIcon: Icon(Icons.calendar_today),
-                        ),
-                        readOnly: true,
-                        onTap: () async {
-                          DateTime? datePicker = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2025),
-                          );
-                          if (datePicker != null) {
-                            String formattedDate =
-                                DateFormat('dd-MM-yyyy').format(datePicker);
-                            setState(() {
-                              dateController.text = formattedDate.toString();
-                            });
-                          } else {
-                            // ????
-                          }
-                        },
-                      ),
-                    ),
+                  inputForm(
+                    (p0) {
+                      if (p0 == null || p0.isEmpty) {
+                        return 'Tanggal lahir tidak boleh kosong';
+                      }
+                      return null;
+                    },
+                    controller: dateController,
+                    hintTxt: 'Birth Date',
+                    helperTxt: '',
+                    iconData: Icons.calendar_today,
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? datePicker = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2025),
+                      );
+                      if (datePicker != null) {
+                        String formattedDate =
+                            DateFormat('dd-MM-yyyy').format(datePicker);
+                        setState(() {
+                          dateController.text = formattedDate.toString();
+                        });
+                      } else {
+                        // ????
+                      }
+                    },
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 10, top: 10),

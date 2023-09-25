@@ -8,7 +8,7 @@ void main() {
   runApp(const MainApp());
 }
 
-bool themeMode = false;
+var themeMode = false;
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
@@ -25,7 +25,7 @@ class _MainAppState extends State<MainApp> {
       theme: themeMode ? darkMode() : lightMode(),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Hotel'),
+          title: const Center(child: Text('Hotel PBP')),
         ),
         body: const LoginView(),
         floatingActionButton: FloatingActionButton(

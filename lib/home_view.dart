@@ -1,73 +1,204 @@
 import 'package:flutter/material.dart';
 
-import 'package:hotel_pbp/home_grid.dart';
-
 class HomeView extends StatefulWidget {
-  const HomeView({Key? key}) : super(key: key);
+  const HomeView({super.key});
 
   @override
   State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  final _selectedColor = const Color(0xff1a73e8);
+class _HomeViewState extends State<HomeView> {
+  int _selectedIndex = 0;
 
-  final _iconTabs = const [
-    Tab(icon: Icon(Icons.chat)),
-    Tab(icon: Icon(Icons.call)),
-    Tab(icon: Icon(Icons.settings)),
+  void _onItemTapped(int index){
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  static const List<Widget> _widgetOptions = <Widget>[
+    // home page
+    _HomePage(),
+    
+    // profile page
+    _ProfilePage()
   ];
-
+  
   @override
-  void initState() {
-    _tabController = TabController(length: 3, vsync: this);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _tabController.dispose();
-  }
-
-  @override
-  Widget build(buildContext) {
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: _selectedColor,
-        title: const Text("Taskbar"),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Color(0xFFFC5F86),
+        selectedItemColor: Colors.white, 
+      selectedLabelStyle: TextStyle(color: Colors.white),
+        items: const[
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView(
-          children: [
-            TabBar(
-              controller: _tabController,
-              tabs: _iconTabs,
-              unselectedLabelColor: Colors.black,
-              labelColor: _selectedColor,
-              indicator: BoxDecoration(
-                borderRadius: BorderRadius.circular(80.0),
-                color: _selectedColor.withOpacity(0.2),
+      body: _widgetOptions.elementAt(_selectedIndex),
+    );
+  }
+}
+
+class _HomePage extends StatelessWidget {
+  const _HomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Color(0xFFFFF0F5),
+      child: GridView.count(
+        crossAxisCount: 2,
+        children: List.generate(10, (index) {
+          return Center(
+            child: Container(
+              margin: EdgeInsets.all(8.0),
+              child: Image.asset('./lib/images/hotel1.jpg'),
+            )
+          );
+        }),
+      ),
+    );
+  }
+}
+
+class _ProfilePage extends StatelessWidget {
+  const _ProfilePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      initialIndex: 0,
+      length: 5,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFFFC5F86),
+          title: const Text('Choose Profile'),
+          bottom: const TabBar(
+            dividerColor: Colors.transparent,
+            tabs: <Widget>[
+              Tab(
+                text: 'Thessa',
+                icon: Icon(Icons.person),
               ),
-              onTap: (value) {
-                
-              },
-            ),
-          ]
-              .map((item) => Column(
-                    children: [
-                      item,
-                      const Divider(
-                        color: Colors.transparent,
-                      )
-                    ],
-                  ))
-              .toList(),
+              Tab(
+                text: 'Jean',
+                icon: Icon(Icons.person),
+              ),
+              Tab(
+                text: 'Bayu',
+                icon: Icon(Icons.person),
+              ),
+              Tab(
+                text: 'Fidel',
+                icon: Icon(Icons.person),
+              ),
+              Tab(
+                text: 'Geraldi',
+                icon: Icon(Icons.person),
+              ),
+              Tab(
+                text: 'Fadhel',
+                icon: Icon(Icons.person),
+              ),
+            ],
+          ),
+        ),
+        body: const TabBarView(
+          children: <Widget>[
+            NestedTabBar('Thessalonica Angelina', '210711122', './images/yori.jpg'),
+            NestedTabBar('Jean Alexander', '210711427', './images/jeha.png'),
+            NestedTabBar('Abraham Bayudestar', '210711447', './images/Dena.jpg'),
+            NestedTabBar('Geraldi Jamin', '210711293', './images/budi.png'),
+            NestedTabBar('Fadhel Sitakka', '210711183', './images/Kevin.jpg'),
+          ],
         ),
       ),
     );
   }
+}
+
+class NestedTabBar extends StatefulWidget {
+  const NestedTabBar(this.fullname, this.npm, this.url, {super.key});
+
+  final String fullname;
+  final String npm;
+  final String url;
+
+  @override
+  State<NestedTabBar> createState() => _NestedTabBarState();
+}
+
+class _NestedTabBarState extends State<NestedTabBar>
+    with TickerProviderStateMixin {
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 1, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: <Widget>[
+              Card(
+                color: Color(0xFFFC5F86),
+                margin: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircleAvatar(
+                      backgroundImage: AssetImage(widget.url),
+                      radius: 68.0, 
+                    ),
+
+                    SizedBox(height: 20.0),
+
+                    Text(
+                      widget.fullname,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 32.0, 
+                      ),
+                    ),
+
+                    Text(
+                      widget.npm,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20
+                      ),
+                    ),
+
+                    // Add spacing
+                    SizedBox(height: 20.0),
+
+                    // Add any additional content here (e.g., tabs)
+                    // ...
+
+                    // Add the TabBar and TabBarView here
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+],
+);
+}
 }

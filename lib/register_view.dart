@@ -153,6 +153,25 @@ class _RegisterViewState extends State<RegisterView> {
                                 ],
                               ),
                             );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Warning'),
+                                content: const Text('Failed to create Account'),
+                                actions: <Widget> [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(14),
+                                      child: const Text("Retry"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
                           }
                         },
                         child: const Text('Register'),

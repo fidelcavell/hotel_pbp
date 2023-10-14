@@ -32,10 +32,10 @@ class SQLUserController {
   }
 
   // Read or display user (one) by email :
-  static Future<User> getUserByEmail(String email) async {
+  static Future<Object> getUserByEmail(String email) async {
     final db = await SQLHelper.db();
     final data = await db.query('user', where: "email = ?", whereArgs: [email]);
-    return User.fromMap(data.first);
+    return data.isNotEmpty ? User.fromMap(data.first) : Null;
   }
 
   // Update user :

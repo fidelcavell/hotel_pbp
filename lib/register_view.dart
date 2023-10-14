@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hotel_pbp/components/form_component.dart';
 import 'package:hotel_pbp/login_view.dart';
+import 'package:hotel_pbp/models/user_model.dart';
 import 'package:hotel_pbp/repos/user_repo.dart';
 
 class RegisterView extends StatefulWidget {
@@ -52,31 +53,34 @@ class _RegisterViewState extends State<RegisterView> {
                       hintTxt: "Username",
                       helperTxt: "",
                       iconData: Icons.person),
-                  inputForm(
-                    ((p0) {
-                      if (p0 == null || p0.isEmpty) {
-                        return 'Email Tidak Boleh Kosong';
-                      }
-                      if (!p0.contains('@')) {
-                        return 'Email harus menggunakan @';
-                      }
-                      if (!_isEmailAvailable) {
-                        return 'Email sudah digunakan!!!!!';
-                      }
-                      return null;
-                    }),
-                    controller: emailController,
-                    hintTxt: "Email",
-                    helperTxt: "",
-                    iconData: Icons.email,
-                    onChanged: (p0) {
-                      UserRepo.getUserByEmail(p0).then((value) {
-                        setState(() {
-                          _isEmailAvailable = value.email == p0 ? false : true;
-                        });
-                      });
-                    },
-                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: SizedBox(
+                          width: 350,
+                          child: TextFormField(
+                            onChanged: (p0) async {
+                              final user = await UserRepo.getUserByEmail(p0);
+                              _isEmailAvailable = user is User ? false : true;
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Email Tidak Boleh Kosong';
+                              }
+                              if (!value.contains('@')) {
+                                return 'Email harus menggunakan @';
+                              }
+                              if (!_isEmailAvailable) {
+                                return 'Email sudah digunakan!!!!!';
+                              }
+                              return null;
+                            },
+                            controller: emailController,
+                            decoration: const InputDecoration(
+                              hintText: "Email",
+                              border: OutlineInputBorder(),
+                              prefixIcon: Icon(Icons.email),
+                            ),
+                          ))),
                   inputForm(((p0) {
                     if (p0 == null || p0.isEmpty) {
                       return 'Password tidak boleh kosong';

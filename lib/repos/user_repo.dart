@@ -24,7 +24,7 @@ class UserRepo {
   }
 
   // get user by email
-  static Future<User> getUserByEmail(String email) async {
+  static Future<Object> getUserByEmail(String email) async {
     return await SQLUserController.getUserByEmail(email);
   }
 

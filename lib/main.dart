@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_pbp/database/sql_helper.dart';
 
 import 'package:hotel_pbp/login_view.dart';
 import 'package:hotel_pbp/themes/dark_mode.dart';
 import 'package:hotel_pbp/themes/light_mode.dart';
 
 void main() {
+  SQLHelper.db;
   runApp(const MainApp());
 }
 

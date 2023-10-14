@@ -8,7 +8,7 @@ class SQLHelper {
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
         username TEXT,
         email TEXT UNIQUE,
-        passsword TEXT,
+        password TEXT,
         gender TEXT,
         noTelp TEXT
       )

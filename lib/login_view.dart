@@ -18,12 +18,12 @@ var themeMode = false;
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
 
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   bool _showPassword = true;
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController usernameController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
     Map? dataForm = widget.data;
 
     return Scaffold(
@@ -50,9 +50,8 @@ class _LoginViewState extends State<LoginView> {
                   return 'Password tidak boleh kosong';
                 }
                 return null;
-              }, onChanged: (p0) {
-                
               },
+                  onChanged: (p0) {},
                   controller: passwordController,
                   obscureText: _showPassword,
                   hintTxt: 'Password',

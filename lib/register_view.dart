@@ -119,108 +119,45 @@ class _RegisterViewState extends State<RegisterView> {
                     },
                   ),
                   Container(
-                    margin: const EdgeInsets.only(left: 10, top: 10),
-                    child: Row(
-                      children: [
-                        Row(
-                          children: [
-                            Radio(
-                              value: 'Male',
-                              groupValue: _gender,
-                              onChanged: (value) {
-                                setState(() {
-                                  _gender = value;
-                                });
-                              },
-                            ),
-                            const Text('Male'),
-                          ],
-                        ),
-                        const SizedBox(width: 40),
-                        Row(
-                          children: [
-                            Radio(
-                              value: 'Female',
-                              groupValue: _gender,
-                              onChanged: (value) {
-                                setState(() {
-                                  _gender = value;
-                                });
-                              },
-                            ),
-                            const Text('Female'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: checkbox1,
-                              onChanged: (value) {
-                                setState(() {
-                                  checkbox1 = value;
-                                });
-                              },
-                            ),
-                            const Text('Travel'),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: checkbox2,
-                              onChanged: (value) {
-                                setState(() {
-                                  checkbox2 = value;
-                                });
-                              },
-                            ),
-                            const Text('Business'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Map<String, dynamic> formData = {};
-                        formData['username'] = usernameController.text;
-                        formData['password'] = passwordController.text;
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Information'),
-                            content: const Text('Account has been created'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => LoginView(
-                                        data: formData,
-                                      ),
+                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            Map<String, dynamic> formData = {};
+                            formData['username'] = usernameController.text;
+                            formData['password'] = passwordController.text;
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Information'),
+                                content: const Text('Account has been created'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => LoginView(
+                                            data: formData,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(14),
+                                      child: const Text("Continue"),
                                     ),
-                                  );
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(14),
-                                  child: const Text("Continue"),
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        );
-                      }
-                    },
-                    child: const Text('Register'),
+                            );
+                          }
+                        },
+                        child: const Text('Register'),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 20),
                 ],

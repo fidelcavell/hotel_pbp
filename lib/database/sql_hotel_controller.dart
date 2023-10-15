@@ -3,16 +3,17 @@ import './sql_helper.dart';
 class SQLHotelController {
   // Create or add hotel :
   static Future<int> addHotel(String image, String name, String desc,
-      String rating, String price) async {
+      String rating, String price, String jumlah) async {
     final db = await SQLHelper.db();
     final data = {
       'image': image,
       'name': name,
-      'desc': desc,
+      'description': desc,
       'rating': rating,
-      'price': price
+      'price': price,
+      'jumlah': jumlah,
     };
-    return await db.insert('hotel', data);
+    return await db.insert('hotel', data); //error
   }
 
   // Read or display hotel :
@@ -23,14 +24,15 @@ class SQLHotelController {
 
   // Update hotel :
   static Future<int> editHotel(int id, String image, String name, String desc,
-      String rating, String price) async {
+      String rating, String price, String jumlah) async {
     final db = await SQLHelper.db();
     final data = {
       'image': image,
       'name': name,
-      'desc': desc,
+      'description': desc,
       'rating': rating,
-      'price': price
+      'price': price,
+      'jumlah': jumlah,
     };
     return await db.update('hotel', data, where: "id = $id");
   }

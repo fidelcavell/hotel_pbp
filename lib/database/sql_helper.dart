@@ -21,7 +21,8 @@ class SQLHelper {
         name TEXT,
         description TEXT,
         rating TEXT,
-        price TEXT
+        price TEXT,
+        jumlah TEXT
       )
     """);
   }
@@ -30,6 +31,6 @@ class SQLHelper {
     return sql.openDatabase('user.db', version: 1,
         onCreate: (sql.Database database, int version) async {
       await createTables(database);
-    });
+    },);
   }
 }

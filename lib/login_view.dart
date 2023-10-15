@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hotel_pbp/components/form_component.dart';
 import 'package:hotel_pbp/register_view.dart';
-import 'package:hotel_pbp/home_view.dart';
+import 'package:hotel_pbp/view/main_screen.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({this.data, super.key});
@@ -50,8 +50,6 @@ class _LoginViewState extends State<LoginView> {
                   return 'Password tidak boleh kosong';
                 }
                 return null;
-              }, onChanged: (p0) {
-                
               },
                   controller: passwordController,
                   obscureText: _showPassword,
@@ -77,7 +75,7 @@ class _LoginViewState extends State<LoginView> {
                             dataForm['password'] == passwordController.text) {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => const HomeView()),
+                            MaterialPageRoute(builder: (_) => const  MainScreen()),
                           );
                         } else {
                           showDialog(

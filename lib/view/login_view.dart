@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:hotel_pbp/components/form_component.dart';
-import 'package:hotel_pbp/register_view.dart';
+import 'package:hotel_pbp/view/register_view.dart';
 import 'package:hotel_pbp/view/main_screen.dart';
 
 class LoginView extends StatefulWidget {
@@ -18,12 +18,12 @@ var themeMode = false;
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
 
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   bool _showPassword = true;
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController usernameController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
     Map? dataForm = widget.data;
 
     return Scaffold(
@@ -51,6 +51,7 @@ class _LoginViewState extends State<LoginView> {
                 }
                 return null;
               },
+                  onChanged: (p0) {},
                   controller: passwordController,
                   obscureText: _showPassword,
                   hintTxt: 'Password',

@@ -3,6 +3,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 
 import './explore_screen.dart';
 import './transaction_screen.dart';
+import './user_profile.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -23,7 +24,7 @@ class _MainScreenState extends State<MainScreen> {
     } else if (currentScreen == 'Transaction-screen') {
       currentWidget = const TransactionScreen();
     } else if (currentScreen == 'Profile-screen') {
-      currentWidget = const ExploreScreen();
+      currentWidget = const UserProfile();
     }
 
     return MaterialApp(

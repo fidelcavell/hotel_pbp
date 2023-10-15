@@ -1,7 +1,8 @@
+import 'package:hotel_pbp/models/user_model.dart';
 import './sql_helper.dart';
 
 class SQLUserController {
- // Create or add User :
+  // Create or add User :
   static Future<int> addUser(String username, String email, String password,
       String gender, String noTelp) async {
     final db = await SQLHelper.db();
@@ -16,9 +17,24 @@ class SQLUserController {
   }
 
   // Read or display user :
-  static Future<List<Map<String, dynamic>>> getUser() async {
+  static Future<List<Map<String, dynamic>>> getAllUsers() async {
     final db = await SQLHelper.db();
+    print(await db.query('user'));
     return db.query('user');
+  }
+
+  // Read or display user (one) by id :
+  static Future<User> getUserById(int id) async {
+    final db = await SQLHelper.db();
+    final data = await db.query('user', where: "id = ?", whereArgs: [id]);
+    return User.fromMap(data.first);
+  }
+
+  // Read or display user (one) by email :
+  static Future<Object> getUserByEmail(String email) async {
+    final db = await SQLHelper.db();
+    final data = await db.query('user', where: "email = ?", whereArgs: [email]);
+    return data.isNotEmpty ? User.fromMap(data.first) : Null;
   }
 
   // Update user :
@@ -32,7 +48,7 @@ class SQLUserController {
       'gender': gender,
       'noTelp': noTelp
     };
-    return await db.update('user', data, where: "id = $id");
+    return await db.update('user', data, where: "id = ?", whereArgs: [id]);
   }
 
   // Delete user :

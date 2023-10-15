@@ -8,7 +8,7 @@ class SQLHelper {
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
         username TEXT,
         email TEXT UNIQUE,
-        passsword TEXT,
+        password TEXT,
         gender TEXT,
         noTelp TEXT
       )
@@ -31,6 +31,6 @@ class SQLHelper {
     return sql.openDatabase('user.db', version: 1,
         onCreate: (sql.Database database, int version) async {
       await createTables(database);
-    },);
+    });
   }
 }

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_pbp/database/sql_helper.dart';
 
-import 'package:hotel_pbp/login_view.dart';
+import 'package:hotel_pbp/view/login_view.dart';
 import 'package:hotel_pbp/themes/dark_mode.dart';
 import 'package:hotel_pbp/themes/light_mode.dart';
 import 'package:hotel_pbp/view/main_screen.dart';
 
 void main() {
+  SQLHelper.db;
   runApp(const MainScreen());
-  //runApp(const MainApp());
+  // runApp(const MainApp());
 }
 
 var themeMode = false;

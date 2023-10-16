@@ -16,11 +16,9 @@ class _RegisterViewState extends State<RegisterView> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController notelpController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
+  TextEditingController noTelpController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
   String? _gender = 'L';
-  bool? checkbox1 = false;
-  bool? checkbox2 = false;
 
   bool _isEmailAvailable = true;
 
@@ -28,119 +26,121 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 175, 61, 49),
         title: const Text('Registration'),
       ),
       body: SafeArea(
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
-            child: Center(
+            child: Container(
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 20),
-                  inputForm((p0) {
-                    if (p0 == null || p0.isEmpty) {
-                      return 'Username Tidak Boleh Kosong';
-                    }
-                    if (p0.toLowerCase() == 'anjing') {
-                      return "Tidak Boleh Menggunakan kata kasar";
-                    }
-                    return null;
-                  },
-                      controller: usernameController,
-                      hintTxt: "Username",
-                      helperTxt: "",
-                      iconData: Icons.person),
-                  Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: SizedBox(
-                          width: 350,
-                          child: TextFormField(
-                            onChanged: (p0) async {
-                              final user = await UserRepo.getUserByEmail(p0);
-                              _isEmailAvailable = user is User ? false : true;
+                  TextFormField(
+                    controller: usernameController,
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.person),
+                        hintText: 'Username',
+                        border: OutlineInputBorder()),
+                    validator: (value) =>
+                        value == '' ? 'Please enter your Username' : null,
+                  ),
+                  const SizedBox(height: 18.0),
+                  TextFormField(
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.email),
+                        hintText: 'Email',
+                        border: OutlineInputBorder()),
+                    onChanged: (value) async {
+                      final user = await UserRepo.getUserByEmail(value);
+                      _isEmailAvailable = user is User ? false : true;
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Email Tidak Boleh Kosong';
+                      }
+                      if (!value.contains('@')) {
+                        return 'Email harus menggunakan @';
+                      }
+                      if (!_isEmailAvailable) {
+                        return 'Email sudah digunakan';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 18.0),
+                  TextFormField(
+                    controller: passwordController,
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.password),
+                        hintText: 'Password',
+                        border: OutlineInputBorder()),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Password tidak boleh kosong';
+                      }
+                      if (value.length < 5) {
+                        return 'Password minimal 5 digit';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 18.0),
+                  TextFormField(
+                    controller: noTelpController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.phone),
+                        hintText: 'Phone',
+                        border: OutlineInputBorder()),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Nomor telepon tidak Boleh kosong';
+                      }
+                      if (value.length < 10) {
+                        return 'Nomor telepon minimal 10 digit';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Radio(
+                            value: 'Pria',
+                            groupValue: _gender,
+                            onChanged: (value) {
+                              setState(() {
+                                _gender = value;
+                              });
                             },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Email Tidak Boleh Kosong';
-                              }
-                              if (!value.contains('@')) {
-                                return 'Email harus menggunakan @';
-                              }
-                              if (!_isEmailAvailable) {
-                                return 'Email sudah digunakan!!!!!';
-                              }
-                              return null;
-                            },
-                            controller: emailController,
-                            decoration: const InputDecoration(
-                              hintText: "Email",
-                              border: OutlineInputBorder(),
-                              prefixIcon: Icon(Icons.email),
-                            ),
-                          ))),
-                  inputForm(((p0) {
-                    if (p0 == null || p0.isEmpty) {
-                      return 'Password tidak boleh kosong';
-                    }
-
-                    if (p0.length < 5) {
-                      return 'Password minimal 5 digit';
-                    }
-                    return null;
-                  }),
-                      controller: passwordController,
-                      hintTxt: 'Password',
-                      helperTxt: '',
-                      iconData: Icons.password,
-                      obscureText: true),
-                  inputForm(((p0) {
-                    if (p0 == null || p0.isEmpty) {
-                      return 'Nomor telepon tidak Boleh kosong';
-                    }
-                    if (p0.length < 10) {
-                      return 'Nomor telepon minimal 10 digit';
-                    }
-                    return null;
-                  }),
-                      controller: notelpController,
-                      hintTxt: "No Telp",
-                      helperTxt: "",
-                      iconData: Icons.phone_android),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      children: [
-                        Row(
-                          children: [
-                            Radio(
-                              value: 'L',
+                          ),
+                          const Text('Laki-laki'),
+                        ],
+                      ),
+                      const SizedBox(width: 15.0),
+                      Row(
+                        children: [
+                          Radio(
+                              value: 'Wanita',
                               groupValue: _gender,
                               onChanged: (value) {
                                 setState(() {
-                                  _gender = value.toString();
+                                  _gender = value;
                                 });
-                              },
-                            ),
-                            const Text('Laki-laki'),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Radio(
-                                value: 'P',
-                                groupValue: _gender,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _gender = value.toString();
-                                  });
-                                }),
-                            const Text('Perempuan'),
-                          ],
-                        )
-                      ],
-                    ),
+                              }),
+                          const Text('Perempuan'),
+                        ],
+                      ),
+                    ],
                   ),
                   Container(
                     margin: const EdgeInsets.symmetric(
@@ -156,10 +156,11 @@ class _RegisterViewState extends State<RegisterView> {
                                 emailController.text,
                                 passwordController.text,
                                 _gender!,
-                                notelpController.text);
+                                noTelpController.text);
                             Map<String, dynamic> formData = {};
                             formData['username'] = usernameController.text;
                             formData['password'] = passwordController.text;
+
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -209,9 +210,6 @@ class _RegisterViewState extends State<RegisterView> {
                         child: const Text('Register'),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20,
                   ),
                 ],
               ),

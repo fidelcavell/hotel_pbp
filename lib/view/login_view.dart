@@ -64,7 +64,7 @@ class _LoginViewState extends State<LoginView> {
                         : Icons.visibility),
                   )),
               const SizedBox(height: 20),
-              // Row contain login's button and Register's button :
+              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

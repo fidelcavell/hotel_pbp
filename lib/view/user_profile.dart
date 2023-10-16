@@ -14,8 +14,10 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Profile Page"),
-          backgroundColor: Colors.cyan,
+          backgroundColor: const Color.fromARGB(255, 175, 61, 49),
+          title: const Center(
+            child: Text('Profile'),
+          ),
         ),
         body: ListView(
           children: [
@@ -24,16 +26,9 @@ class _UserProfileState extends State<UserProfile> {
               Icons.person,
               size: 72,
             ),
-
             const SizedBox(height: 10),
-            //header
-            // Text(
-            //     // //tampil username user
-            //     // textAlign: TextAlign.center,
-            //     // style: TextStyle(color: Colors.grey[900]),
-            //     ),
+            
             const SizedBox(height: 50),
-
             //details
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -94,14 +89,14 @@ class _UserProfileState extends State<UserProfile> {
           //button cancel
           TextButton(
             child: const Text('Cancel'),
-            onPressed: ()=> Navigator.pop(context),
-            ),
+            onPressed: () => Navigator.pop(context),
+          ),
 
           //button save
           TextButton(
             child: const Text('Save'),
-            onPressed: ()=> Navigator.of(context).pop(newValue),
-            ),
+            onPressed: () => Navigator.of(context).pop(newValue),
+          ),
         ],
       ),
     );

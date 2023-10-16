@@ -25,6 +25,7 @@ class InputHotel extends StatefulWidget {
 }
 
 class _InputHotelState extends State<InputHotel> {
+  final formKey = GlobalKey<FormState>();
   TextEditingController controllerName = TextEditingController();
   TextEditingController controllerDesc = TextEditingController();
   TextEditingController controllerRating = TextEditingController();
@@ -53,82 +54,129 @@ class _InputHotelState extends State<InputHotel> {
                     : 'assets/hotel$count.jpg'),
                 SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.grey,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 65),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 25.0),
+                          decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 175, 61, 49),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: const Text(
+                            'Input Your Room',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ],
             ),
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  TextField(
-                    controller: controllerName,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Nama Kamar',
+              child: Form(
+                key: formKey,
+                child: ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    TextFormField(
+                      controller: controllerName,
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.badge),
+                        border: OutlineInputBorder(),
+                        labelText: 'Room Name',
+                      ),
+                      validator: (value) =>
+                          value == '' ? 'Please enter Room Name' : null,
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  TextField(
-                    controller: controllerDesc,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Desc Kamar',
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: controllerDesc,
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.description),
+                        border: OutlineInputBorder(),
+                        labelText: 'Room Description',
+                      ),
+                      validator: (value) =>
+                          value == '' ? 'Please enter Room Description' : null,
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  TextField(
-                    controller: controllerRating,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Rating Kamar',
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: controllerRating,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.star),
+                        border: OutlineInputBorder(),
+                        labelText: 'Room Rating',
+                      ),
+                      validator: (value) =>
+                          value == '' ? 'Please enter Room Rating' : null,
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  TextField(
-                    controller: controllerPrice,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Harga Kamar',
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: controllerPrice,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.sell),
+                        border: OutlineInputBorder(),
+                        labelText: 'Room Price',
+                      ),
+                      validator: (value) =>
+                          value == '' ? 'Please enter Room Price' : null,
                     ),
-                  ),
-                  TextField(
-                    controller: controllerJumlah,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Jumlah Kamar',
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: controllerJumlah,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.meeting_room),
+                        border: OutlineInputBorder(),
+                        labelText: 'Room Quantity',
+                      ),
+                      validator: (value) =>
+                          value == '' ? 'Please enter Room Quantity' : null,
                     ),
-                  ),
-                  const SizedBox(height: 48),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (widget.id == null) {
-                        await addHotel(); //r
-                      } else {
-                        await editHotel(widget.id!, widget.assets!);
-                      }
-
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Save'),
-                  ),
-                ],
+                    const SizedBox(height: 48),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (formKey.currentState!.validate()) {
+                          if (widget.id == null) {
+                            await addHotel(); //r
+                          } else {
+                            await editHotel(widget.id!, widget.assets!);
+                          }
+                          Navigator.pop(context);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 175, 61, 49),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          textStyle: const TextStyle(fontSize: 18)),
+                      child: const Text('Save'),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
               ),
             ),
           ],

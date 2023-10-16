@@ -30,23 +30,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 175, 61, 49),
+        title: const Center(
+          child: Text('Explore'),
+        ),
+      ),
       body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 30.0),
-            decoration:
-                const BoxDecoration(color: Color.fromARGB(255, 175, 61, 49)),
-            width: double.infinity,
-            child: const Center(
-              child: Text(
-                'Explore',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-          ),
           Expanded(
             child: Padding(
               padding:

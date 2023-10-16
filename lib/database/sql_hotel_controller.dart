@@ -34,12 +34,12 @@ class SQLHotelController {
       'price': price,
       'jumlah': jumlah,
     };
-    return await db.update('hotel', data, where: "id = $id");
+    return await db.update('hotel', data,  where: "id = ?", whereArgs: [id]);
   }
 
   // Delete hotel :
   static Future<int> deleteHotel(int id) async {
     final db = await SQLHelper.db();
-    return await db.delete('hotel', where: "id = $id");
+    return await db.delete('hotel', where: "id = ?", whereArgs: [id]);
   }
 }

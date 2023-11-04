@@ -1,6 +1,8 @@
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_pbp/components/text_box.dart';
-import 'package:hotel_pbp/database/sql_user_controller.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -10,6 +12,30 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+  late CameraController _controller;
+  File? _profilePic;
+
+  @override
+  void initState() {
+    initCam();
+    super.initState();
+  }
+
+  void initCam() async {
+    final cameras = await availableCameras();
+    for (final camera in cameras) {
+      if (camera.lensDirection == CameraLensDirection.front) {
+        _controller = CameraController(camera, ResolutionPreset.medium);
+      }
+    }
+    _controller.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,12 +48,44 @@ class _UserProfileState extends State<UserProfile> {
         body: ListView(
           children: [
             //progile pic
-            const Icon(
-              Icons.person,
-              size: 72,
+            TextButton(
+              onPressed: () {
+                showBottomSheet(
+                    context: context,
+                    builder: (context) => Container(
+                          margin: const EdgeInsets.all(24),
+                          child: Stack(
+                            children: [
+                              CameraPreview(_controller),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: FloatingActionButton(
+                                  onPressed: () async {
+                                    final image =
+                                        await _controller.takePicture();
+                                    setState(() {
+                                      _profilePic = File(image.path);
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Icon(Icons.camera_alt),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ));
+              },
+              child: CircleAvatar(
+                radius: 96,
+                backgroundImage: _profilePic != null
+                    ? FileImage(_profilePic!)
+                    : const AssetImage('assets/default-avatar.png')
+                        as ImageProvider<Object>?,
+              ),
             ),
             const SizedBox(height: 10),
-            
+
             const SizedBox(height: 50),
             //details
             Padding(
@@ -74,7 +132,7 @@ class _UserProfileState extends State<UserProfile> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.white,
-        title: Text("Edit" + field),
+        title: Text("Edit$field"),
         content: TextField(
           autofocus: true,
           decoration: InputDecoration(

@@ -3,20 +3,19 @@ import 'package:sqflite/sqflite.dart' as sql;
 class SQLHelper {
   // Create tables :
   static Future<void> createTables(sql.Database database) async {
-    await database.execute(
-        """
+    await database.execute("""
       CREATE TABLE user(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
         username TEXT,
         email TEXT UNIQUE,
         password TEXT,
         gender TEXT,
-        noTelp TEXT
+        noTelp TEXT,
+        profilePicture TEXT DEFAULT NULL
       )
     """);
 
-    await database.execute(
-        """
+    await database.execute("""
       CREATE TABLE hotel(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         image TEXT, 

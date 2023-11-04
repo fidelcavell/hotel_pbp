@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_pbp/components/form_component.dart';
 import 'package:hotel_pbp/view/login_view.dart';
 import 'package:hotel_pbp/models/user_model.dart';
 import 'package:hotel_pbp/repos/user_repo.dart';
@@ -172,9 +171,7 @@ class _RegisterViewState extends State<RegisterView> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (_) => LoginView(
-                                            data: formData,
-                                          ),
+                                          builder: (_) => const LoginView(),
                                         ),
                                       );
                                     },

@@ -1,6 +1,13 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_pbp/components/text_box.dart';
 import 'package:hotel_pbp/database/sql_user_controller.dart';
+import 'package:hotel_pbp/global/user.dart';
+import 'package:hotel_pbp/models/user_model.dart';
+import 'package:hotel_pbp/repos/user_repo.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -10,6 +17,69 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+  late CameraController _controller;
+  User? _currentUser;
+  File? _profilePic;
+
+  @override
+  void initState() {
+    initCam();
+    initUser();
+    super.initState();
+  }
+
+  void initUser() async {
+    final u = await UserRepo.getUserById(currentUserID);
+    setState(() {
+      _currentUser = u;
+    });
+    if (u.profilePicture != null) {
+      final f = await convertBase64ToImage(u.profilePicture!);
+      setState(() {
+        _profilePic = f;
+      });
+    }
+  }
+
+  void initCam() async {
+    final cameras = await availableCameras();
+    for (final camera in cameras) {
+      if (camera.lensDirection == CameraLensDirection.front) {
+        _controller = CameraController(camera, ResolutionPreset.medium);
+      }
+    }
+    _controller.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    });
+  }
+
+  // Convert Image to Base64 String
+  Future<String> convertImageToBase64(File image) async {
+    final bytes = await image.readAsBytes();
+    return base64Encode(bytes);
+  }
+
+  // Convert Base64 String to Image
+  Future<File> convertBase64ToImage(String base64Image) async {
+    final bytes = base64Decode(base64Image);
+    final directory = Directory.systemTemp;
+    final file =
+        File('${directory.path}/${DateTime.now().toUtc().toString()}.jpg');
+    await file.writeAsBytes(bytes, flush: true);
+
+    return file;
+  }
+
+  // Dispose Camera Controller
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,12 +92,48 @@ class _UserProfileState extends State<UserProfile> {
         body: ListView(
           children: [
             //progile pic
-            const Icon(
-              Icons.person,
-              size: 72,
+            TextButton(
+              onPressed: () {
+                showBottomSheet(
+                    context: context,
+                    builder: (context) => Container(
+                          margin: const EdgeInsets.all(24),
+                          child: Stack(
+                            children: [
+                              CameraPreview(_controller),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: FloatingActionButton(
+                                  onPressed: () async {
+                                    final image =
+                                        await _controller.takePicture();
+                                    SQLUserController.updateProfilePictureById(
+                                        currentUserID,
+                                        await convertImageToBase64(
+                                            File(image.path)));
+                                    setState(() {
+                                      _profilePic = File(image.path);
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Icon(Icons.camera_alt),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ));
+              },
+              child: CircleAvatar(
+                radius: 96,
+                backgroundImage: _profilePic != null
+                    ? FileImage(_profilePic!)
+                    : const AssetImage('assets/default-avatar.png')
+                        as ImageProvider<Object>?,
+              ),
             ),
             const SizedBox(height: 10),
-            
+
             const SizedBox(height: 50),
             //details
             Padding(
@@ -39,13 +145,13 @@ class _UserProfileState extends State<UserProfile> {
             ),
             //email
             TextBox(
-              text: 'username current user',
+              text: _currentUser?.username ?? 'Username@user',
               sectionName: 'Username',
               onPressed: () => editField('Username'),
             ),
             //email
             TextBox(
-              text: 'email@user',
+              text: _currentUser?.email ?? 'Email@user',
               sectionName: 'Email',
               onPressed: () => editField('Email'),
             ),
@@ -53,14 +159,14 @@ class _UserProfileState extends State<UserProfile> {
 
             //gender
             TextBox(
-              text: 'Gender@user',
+              text: _currentUser?.gender ?? 'Gender@user',
               sectionName: 'Gender',
               onPressed: () => editField('Gender'),
             ),
 
             //notelp
             TextBox(
-              text: 'notelp@user',
+              text: _currentUser?.nomorTelepon ?? 'NoTelp@user',
               sectionName: 'noTelp',
               onPressed: () => editField('noTelp'),
             ),
@@ -74,7 +180,7 @@ class _UserProfileState extends State<UserProfile> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.white,
-        title: Text("Edit" + field),
+        title: Text("Edit$field"),
         content: TextField(
           autofocus: true,
           decoration: InputDecoration(

@@ -56,4 +56,21 @@ class SQLUserController {
     final db = await SQLHelper.db();
     return await db.delete('user', where: "id = $id");
   }
+
+  // Utils for Login(Return User ID if success, -1 if failed) :
+  static Future<int> login(String username, String password) async {
+    final db = await SQLHelper.db();
+    final data = await db.query('user',
+        where: "username = ? AND password = ?",
+        whereArgs: [username, password]);
+    return data.isNotEmpty ? User.fromMap(data.first).id ?? -1 : -1;
+  }
+
+  // Utils for Update Profile Picture By ID (Return 1 if success, 0 if failed) :
+  static Future<int> updateProfilePictureById(
+      int id, String profilePicture) async {
+    final db = await SQLHelper.db();
+    final data = {'profilePicture': profilePicture};
+    return await db.update('user', data, where: "id = ?", whereArgs: [id]);
+  }
 }

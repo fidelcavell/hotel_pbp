@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:hotel_pbp/components/form_component.dart';
+import 'package:hotel_pbp/database/sql_user_controller.dart';
+import 'package:hotel_pbp/global/user.dart';
 import 'package:hotel_pbp/view/register_view.dart';
 import 'package:hotel_pbp/view/main_screen.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({this.data, super.key});
-
-  final Map? data;
+  const LoginView({super.key});
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -24,8 +24,6 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    Map? dataForm = widget.data;
-
     return Scaffold(
       body: SafeArea(
         child: Form(
@@ -64,7 +62,7 @@ class _LoginViewState extends State<LoginView> {
                         : Icons.visibility),
                   )),
               const SizedBox(height: 20),
-              
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -72,35 +70,40 @@ class _LoginViewState extends State<LoginView> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        if (dataForm!['username'] == usernameController.text &&
-                            dataForm['password'] == passwordController.text) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => const  MainScreen()),
-                          );
-                        } else {
-                          showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                    title: const Text('Password Salah'),
-                                    content: TextButton(
-                                      onPressed: () => pushRegister(context),
-                                      child: const Text('Daftar disini !!'),
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, 'Cancel'),
-                                        child: const Text('Cancel'),
+                        SQLUserController.login(usernameController.text,
+                                passwordController.text)
+                            .then((id) {
+                          if (id != -1) {
+                            currentUserID = id;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const MainScreen()),
+                            );
+                          } else {
+                            showDialog(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                      title: const Text('Password Salah'),
+                                      content: TextButton(
+                                        onPressed: () => pushRegister(context),
+                                        child: const Text('Daftar disini !!'),
                                       ),
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, 'OK'),
-                                        child: const Text('OK'),
-                                      ),
-                                    ],
-                                  ));
-                        }
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
+                                          child: const Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'OK'),
+                                          child: const Text('OK'),
+                                        ),
+                                      ],
+                                    ));
+                          }
+                        });
                       }
                     },
                     child: const Text('Login'),

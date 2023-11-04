@@ -1,0 +1,1 @@
+int currentUserID = -1;

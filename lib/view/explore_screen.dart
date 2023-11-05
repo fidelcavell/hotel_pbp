@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shake/shake.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -26,6 +27,43 @@ class _ExploreScreenState extends State<ExploreScreen> {
     'assets/hotel9.jpg',
     'assets/hotel10.jpg',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+     ShakeDetector detector = ShakeDetector.autoStart(
+      onPhoneShake: () {
+        // Show a pop-up dialog to contact customer service
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Contact Customer Service'),
+              content: Text('Do you want to contact customer service?'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Contact'),
+                  onPressed: () {
+                    // Add your code to initiate the contact with customer service here.
+                    // You can launch a phone call or open a contact form, for example.
+                    // Remember to implement this functionality.
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+    // detector.stopListening();
+  }
 
   @override
   Widget build(BuildContext context) {

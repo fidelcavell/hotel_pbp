@@ -25,6 +25,7 @@ class _MainAppState extends State<MainApp> {
       theme: themeMode ? darkMode() : lightMode(),
       home: Scaffold(
         appBar: AppBar(
+          backgroundColor: Color.fromARGB(255, 175, 61, 49),
           title: const Center(child: Text('Hotel PBP')),
         ),
         body: const LoginView(),

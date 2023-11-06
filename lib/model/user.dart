@@ -1,6 +1,6 @@
 class User {
   final int? id;
-  String? username, email, password, gender, noTelp;
+  String? username, email, password, gender, noTelp, origin;
 
   User({
     this.id,
@@ -8,6 +8,7 @@ class User {
     this.email,
     this.password,
     this.gender,
-    this.noTelp
+    this.noTelp,
+    this.origin,
   });
 }

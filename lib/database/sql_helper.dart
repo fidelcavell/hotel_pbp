@@ -11,6 +11,7 @@ class SQLHelper {
         password TEXT,
         gender TEXT,
         noTelp TEXT,
+        origin TEXT,
         profilePicture TEXT DEFAULT NULL
       )
     """);

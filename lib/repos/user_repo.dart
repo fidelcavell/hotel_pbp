@@ -4,9 +4,9 @@ import 'package:hotel_pbp/models/user_model.dart';
 class UserRepo {
   // create user
   static Future<bool> createUser(String username, String email, String password,
-      String gender, String noTelp) async {
+      String gender, String noTelp, String origin) async {
     return await SQLUserController.addUser(
-                username, email, password, gender, noTelp) >
+                username, email, password, gender, noTelp, origin) >
             0
         ? true
         : false;
@@ -30,9 +30,9 @@ class UserRepo {
 
   // update user
   static Future<bool> updateUser(int id, String username, String email,
-      String password, String gender, String noTelp) async {
+      String password, String gender, String noTelp, String origin) async {
     return await SQLUserController.editUser(
-                id, username, email, password, gender, noTelp) >
+                id, username, email, password, gender, noTelp, origin) >
             0
         ? true
         : false;

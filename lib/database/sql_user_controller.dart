@@ -4,14 +4,15 @@ import './sql_helper.dart';
 class SQLUserController {
   // Create or add User :
   static Future<int> addUser(String username, String email, String password,
-      String gender, String noTelp) async {
+      String gender, String noTelp, String origin) async {
     final db = await SQLHelper.db();
     final data = {
       'username': username,
       'email': email,
       'password': password,
       'gender': gender,
-      'noTelp': noTelp
+      'noTelp': noTelp,
+      'origin': origin,
     };
     return await db.insert('user', data);
   }
@@ -39,14 +40,15 @@ class SQLUserController {
 
   // Update user :
   static Future<int> editUser(int id, String username, String email,
-      String password, String gender, String noTelp) async {
+      String password, String gender, String noTelp, String origin) async {
     final db = await SQLHelper.db();
     final data = {
       'username': username,
       'email': email,
       'password': password,
       'gender': gender,
-      'noTelp': noTelp
+      'noTelp': noTelp,
+      'origin': origin,
     };
     return await db.update('user', data, where: "id = ?", whereArgs: [id]);
   }

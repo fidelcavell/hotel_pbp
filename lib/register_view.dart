@@ -18,6 +18,7 @@ class _RegisterViewState extends State<RegisterView> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController notelpController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  bool _showPassword = true;
   String? _gender;
   bool? checkbox1 = false;
   bool? checkbox2 = false;
@@ -77,7 +78,15 @@ class _RegisterViewState extends State<RegisterView> {
                       hintTxt: 'Password',
                       helperTxt: '',
                       iconData: Icons.password,
-                      obscureText: true),
+                      obscureText: _showPassword,
+                      togglePassword: GestureDetector(
+                        onTap: passwordVisibility,
+                        child: Icon(
+                            ? Icons.visibility_off
+                            : Icons.visibility
+                        ),
+                      )
+                      ),
                   inputForm(((p0) {
                     if (p0 == null || p0.isEmpty) {
                       return 'Nomor telepon tidak Boleh kosong';
@@ -187,4 +196,11 @@ class _RegisterViewState extends State<RegisterView> {
       ),
     );
   }
+
+  void passwordVisibility() {
+    setState ((){
+      _showPassword = !_showPassword;
+    });
+  }
+  
 }

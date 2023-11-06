@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../database/sql_hotel_controller.dart';
 import '../event/input_hotel.dart';
@@ -19,6 +21,17 @@ class _TransactionScreenState extends State<TransactionScreen> {
     setState(() {
       hotelRoom = data;
     });
+  }
+
+  void getHotelById(int id) {
+    for (var i = 0; i < hotelRoom.length; i++) {
+      if (hotelRoom[i]['id'] == id) {
+        setState(() {
+          hotelRoom = [hotelRoom[i]];
+        });
+        return;
+      }
+    }
   }
 
   @override
@@ -63,15 +76,32 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   label: const Text('Add Hotel room'),
                 ),
                 IconButton(
+                    onPressed: () {
+                      refresh();
+                    },
+                    icon: const Icon(Icons.hotel)),
+                IconButton(
                   onPressed: () {
-                    setState(() {
-                      isFavorite = !isFavorite;
-                    });
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Container(
+                            margin: const EdgeInsets.all(16.0),
+                            child: MobileScanner(
+                              fit: BoxFit.fill,
+                              onDetect: (barcodes) {
+                                if (barcodes.barcodes.isEmpty) {
+                                  return;
+                                }
+                                getHotelById(int.parse(
+                                    barcodes.barcodes.first.rawValue!));
+                                Navigator.pop(context);
+                              },
+                            ),
+                          );
+                        });
                   },
-                  icon: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: Colors.red,
-                  ),
+                  icon: const Icon(Icons.qr_code_scanner),
                 ),
               ],
             ),
@@ -98,13 +128,37 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  hotelRoom[index]['name'],
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 30.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      hotelRoom[index]['name'],
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 30.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) => Container(
+                                                  margin: const EdgeInsets.all(
+                                                      16.0),
+                                                  child: Column(
+                                                    children: [
+                                                      const Text('QR Code'),
+                                                      QrImageView(
+                                                          data: hotelRoom[index]
+                                                                  ['id']
+                                                              .toString()),
+                                                    ],
+                                                  ),
+                                                ));
+                                      },
+                                      icon: const Icon(Icons.qr_code),
+                                    ),
+                                  ],
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,

@@ -1,4 +1,4 @@
-import 'package:hotel_pbp/models/user_model.dart';
+import 'package:hotel_pbp/model/user.dart';
 import './sql_helper.dart';
 
 class SQLUserController {

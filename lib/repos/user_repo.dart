@@ -1,5 +1,5 @@
 import 'package:hotel_pbp/database/sql_user_controller.dart';
-import 'package:hotel_pbp/models/user_model.dart';
+import 'package:hotel_pbp/model/user.dart';
 
 class UserRepo {
   // create user

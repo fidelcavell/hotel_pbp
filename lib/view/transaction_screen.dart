@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+// import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:uuid/uuid.dart';
 
 import '../database/sql_hotel_controller.dart';
 import '../event/input_hotel.dart';
+import 'package:hotel_pbp/pdf/pdf_view.dart';
+import 'package:hotel_pbp/model/user.dart';
+import 'package:hotel_pbp/repos/user_repo.dart';
+import 'package:hotel_pbp/global/user.dart';
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -15,6 +21,8 @@ class TransactionScreen extends StatefulWidget {
 class _TransactionScreenState extends State<TransactionScreen> {
   List<Map<String, dynamic>> hotelRoom = [];
   bool isFavorite = false;
+  User? _currentUser;
+  String id = const Uuid().v1();
 
   void refresh() async {
     final data = await SQLHotelController.getHotel();
@@ -38,6 +46,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
   void initState() {
     refresh();
     super.initState();
+  }
+
+  void initUser() async {
+    final u = await UserRepo.getUserById(currentUserID);
+    setState(() {
+      _currentUser = u;
+    });
   }
 
   @override
@@ -201,7 +216,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                 Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Row(
+                                  child: Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
@@ -250,6 +265,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                         icon: const Icon(Icons.delete),
                                         label: const Text('Delete'),
                                       ),
+                                      buttonCreatePDF(context, index),
                                     ],
                                   ),
                                 ),
@@ -263,7 +279,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 );
               },
             ),
-          )
+          ),
         ],
       ),
     );
@@ -272,5 +288,29 @@ class _TransactionScreenState extends State<TransactionScreen> {
   Future<void> deleteHotel(int id) async {
     await SQLHotelController.deleteHotel(id);
     refresh();
+  }
+
+  Container buttonCreatePDF(BuildContext context, int index) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 2),
+      child: ElevatedButton(
+        onPressed: () {
+          createPdf(_currentUser, id, context, hotelRoom[index]['name'],
+              hotelRoom[index]['price'], hotelRoom[index]['jumlah']);
+          setState(() {
+            const uuid = Uuid();
+            id = uuid.v1();
+          });
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.amber,
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+        ),
+        child: const Text('Create PDF'),
+      ),
+    );
   }
 }

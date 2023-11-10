@@ -41,6 +41,11 @@ dependencies:
   shake: ^2.2.0
   qr_flutter: ^4.1.0
   mobile_scanner: ^3.5.2
+  pdf: ^3.6.4
+  printing: ^5.9.0
+  barcode_widget: ^2.0.4
+  responsive_sizer: ^3.2.0
+  uuid: ^3.0.6
 
 
 dev_dependencies:

@@ -3,7 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
 import 'package:hotel_pbp/view/login_view.dart';
-import 'package:hotel_pbp/models/user_model.dart';
+import 'package:hotel_pbp/model/user.dart';
 import 'package:hotel_pbp/repos/user_repo.dart';
 
 class RegisterView extends StatefulWidget {

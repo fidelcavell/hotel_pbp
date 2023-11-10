@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hotel_pbp/components/text_box.dart';
 import 'package:hotel_pbp/database/sql_user_controller.dart';
 import 'package:hotel_pbp/global/user.dart';
-import 'package:hotel_pbp/models/user_model.dart';
+import 'package:hotel_pbp/model/user.dart';
 import 'package:hotel_pbp/repos/user_repo.dart';
 
 class UserProfile extends StatefulWidget {

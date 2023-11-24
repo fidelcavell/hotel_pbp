@@ -6,7 +6,8 @@ import './transaction_screen.dart';
 import './user_profile.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  MainScreen({required this.id, super.key});
+  int id;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -14,6 +15,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   var currentScreen = 'Explore-screen';
+
 
   @override
   Widget build(buildContext) {
@@ -24,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
     } else if (currentScreen == 'Transaction-screen') {
       currentWidget = const TransactionScreen();
     } else if (currentScreen == 'Profile-screen') {
-      currentWidget = const UserProfile();
+      currentWidget = UserProfile(id: widget.id);
     }
 
     return MaterialApp(

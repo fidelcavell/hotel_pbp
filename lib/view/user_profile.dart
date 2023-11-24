@@ -4,13 +4,12 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_pbp/components/text_box.dart';
-import 'package:hotel_pbp/database/sql_user_controller.dart';
-import 'package:hotel_pbp/global/user.dart';
-import 'package:hotel_pbp/model/user.dart';
-import 'package:hotel_pbp/repos/user_repo.dart';
+import 'package:hotel_pbp/client/user_client.dart';
+import 'package:hotel_pbp/entity/user.dart';
 
 class UserProfile extends StatefulWidget {
-  const UserProfile({super.key});
+  UserProfile({required this.id, super.key});
+  int id;
 
   @override
   State<UserProfile> createState() => _UserProfileState();
@@ -29,7 +28,7 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   void initUser() async {
-    final u = await UserRepo.getUserById(currentUserID);
+    final u = await UserClient.find(widget.id);
     setState(() {
       _currentUser = u;
     });
@@ -106,12 +105,13 @@ class _UserProfileState extends State<UserProfile> {
                                 right: 0,
                                 child: FloatingActionButton(
                                   onPressed: () async {
-                                    final image =
-                                        await _controller.takePicture();
-                                    SQLUserController.updateProfilePictureById(
-                                        currentUserID,
-                                        await convertImageToBase64(
-                                            File(image.path)));
+                                    final image = await _controller.takePicture();
+                                    
+                                    // Bagian Update imagePath di database :
+                                    // SQLUserController.updateProfilePictureById(
+                                    //     currentUserID,
+                                    //     await convertImageToBase64(
+                                    //         File(image.path)));
                                     setState(() {
                                       _profilePic = File(image.path);
                                     });
@@ -166,7 +166,7 @@ class _UserProfileState extends State<UserProfile> {
 
             //notelp
             TextBox(
-              text: _currentUser?.nomorTelepon ?? 'NoTelp@user',
+              text: _currentUser?.nomorTelepon.toString() ?? 'NoTelp@user',
               sectionName: 'noTelp',
               onPressed: () => editField('noTelp'),
             ),

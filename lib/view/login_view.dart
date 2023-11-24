@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:hotel_pbp/components/form_component.dart';
-import 'package:hotel_pbp/database/sql_user_controller.dart';
-import 'package:hotel_pbp/global/user.dart';
 import 'package:hotel_pbp/view/register_view.dart';
 import 'package:hotel_pbp/view/main_screen.dart';
+import 'package:hotel_pbp/client/user_client.dart';
+import 'package:hotel_pbp/entity/user.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -67,42 +68,42 @@ class _LoginViewState extends State<LoginView> {
                 children: [
                   // Login button :
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        SQLUserController.login(usernameController.text,
-                                passwordController.text)
-                            .then((id) {
-                          if (id != -1) {
-                            currentUserID = id;
+                        final List<User> users = await UserClient.fetchAll();
+                        for (User user in users) {
+                          if (user.username == usernameController.text &&
+                              user.password == passwordController.text) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => const MainScreen()),
+                                  builder: (_) => MainScreen(id: user.id)),
                             );
-                          } else {
-                            showDialog(
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                      title: const Text('Password Salah'),
-                                      content: TextButton(
-                                        onPressed: () => pushRegister(context),
-                                        child: const Text('Daftar disini !!'),
-                                      ),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, 'Cancel'),
-                                          child: const Text('Cancel'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, 'OK'),
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
-                                    ));
+                            return;
                           }
-                        });
+                        }
+                        
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text('Password Salah'),
+                            content: TextButton(
+                              onPressed: () => pushRegister(context),
+                              child: const Text('Daftar disini !!'),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context, 'Cancel'),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
                       }
                     },
                     child: const Text('Login'),
@@ -148,4 +149,18 @@ class _LoginViewState extends State<LoginView> {
       _showPassword = !_showPassword;
     });
   }
+}
+
+void showSnackBar(BuildContext context, String message, Color background) {
+  final scaffold = ScaffoldMessenger.of(context);
+  scaffold.showSnackBar(
+    SnackBar(
+      content: Text(message),
+      backgroundColor: background,
+      action: SnackBarAction(
+        label: 'hide',
+        onPressed: scaffold.hideCurrentSnackBar,
+      ),
+    ),
+  );
 }

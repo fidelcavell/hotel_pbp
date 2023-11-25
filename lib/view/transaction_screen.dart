@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_pbp/client/transaction_client.dart';
+import 'package:hotel_pbp/client/user_client.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 // import 'package:responsive_sizer/responsive_sizer.dart';
@@ -25,7 +27,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   String id = const Uuid().v1();
 
   void refresh() async {
-    final data = await SQLHotelController.getHotel();
+    final data = await TransactionClient.fetchAll();
     setState(() {
       hotelRoom = data;
     });
@@ -259,8 +261,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                               Colors.red.withOpacity(0.5),
                                         ),
                                         onPressed: () async {
-                                          await deleteHotel(
+                                          await TransactionClient.deletee(
                                               hotelRoom[index]['id']);
+                                          refresh();
                                         },
                                         icon: const Icon(Icons.delete),
                                         label: const Text('Delete'),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_pbp/client/transaction_client.dart';
 import 'dart:math';
 
 import '../database/sql_hotel_controller.dart';
@@ -186,25 +187,25 @@ class _InputHotelState extends State<InputHotel> {
   }
 
   Future<void> addHotel() async {
-    await SQLHotelController.addHotel(
-      'assets/hotel$count.jpg',
+    await TransactionClient.create(
       controllerName.text,
       controllerDesc.text,
-      controllerRating.text,
       controllerPrice.text,
+      controllerRating.text,
       controllerJumlah.text,
+      'assets/hotel$count.jpg',
     );
   }
 
   Future<void> editHotel(int id, String assets) async {
-    await SQLHotelController.editHotel(
+    await TransactionClient.update(
       id,
-      assets,
       controllerName.text,
       controllerDesc.text,
-      controllerRating.text,
       controllerPrice.text,
+      controllerRating.text,
       controllerJumlah.text,
+      assets,
     );
   }
 }

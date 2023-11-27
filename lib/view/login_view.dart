@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:hotel_pbp/components/form_component.dart';
+import 'package:hotel_pbp/view/forgot_password_screen.dart';
 import 'package:hotel_pbp/view/register_view.dart';
 import 'package:hotel_pbp/view/main_screen.dart';
 import 'package:hotel_pbp/client/user_client.dart';
@@ -82,7 +83,7 @@ class _LoginViewState extends State<LoginView> {
                             return;
                           }
                         }
-                        
+
                         showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
@@ -117,6 +118,14 @@ class _LoginViewState extends State<LoginView> {
                     },
                     child: const Text('Belum punya akun?'),
                   ),
+                  TextButton(
+                    onPressed: () {
+                      Map<String, dynamic> formData = {};
+                      formData['password'] = passwordController.text;
+                      pushChangePassword(context);
+                    },
+                    child: const Text('Forget Password?'),
+                  ),
                 ],
               ),
             ],
@@ -148,6 +157,11 @@ class _LoginViewState extends State<LoginView> {
     setState(() {
       _showPassword = !_showPassword;
     });
+  }
+
+  void pushChangePassword(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_) => const ForgotPassword()));
   }
 }
 

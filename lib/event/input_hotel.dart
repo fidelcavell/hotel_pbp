@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:hotel_pbp/client/transaction_client.dart';
 import 'dart:math';
+import 'package:flutter/material.dart';
 
-import '../database/sql_hotel_controller.dart';
+import 'package:hotel_pbp/client/transaction_client.dart';
 
 final randomizer = Random();
 

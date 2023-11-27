@@ -12,10 +12,9 @@ import 'package:hotel_pbp/invoice/item_doc.dart';
 import 'package:hotel_pbp/invoice/model/custom_row_invoice.dart';
 import 'package:hotel_pbp/invoice/model/hotel_room.dart';
 import 'package:hotel_pbp/pdf/preview_screen.dart';
-import 'package:hotel_pbp/model/user.dart';
 
-Future<void> createPdf(User? currentUser, String id, BuildContext context,
-    String name, String price, String jumlah) async {
+Future<void> createPdf(String id, BuildContext context, String name,
+    String price, String jumlah) async {
   final doc = pw.Document();
   final now = DateTime.now();
   final formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
@@ -74,7 +73,6 @@ Future<void> createPdf(User? currentUser, String id, BuildContext context,
 
   doc.addPage(
     pw.MultiPage(
-        
       pageTheme: pdfTheme,
       // Header PDF :
       header: (pw.Context context) {
@@ -89,7 +87,7 @@ Future<void> createPdf(User? currentUser, String id, BuildContext context,
               crossAxisAlignment: pw.CrossAxisAlignment.center,
               children: [
                 // Bagian PDF yang menampilkan invoice :
-                topOfInvoice(imageInvoice, currentUser),
+                topOfInvoice(imageInvoice),
                 pw.SizedBox(height: 5.h),
 
                 contentOfInvoice(table),
@@ -151,7 +149,6 @@ pw.Header headerPDF() {
 
 pw.Padding topOfInvoice(
   pw.MemoryImage imageInvoice,
-  User? currentUser,
 ) {
   return pw.Padding(
     padding: const pw.EdgeInsets.all(8.0),
@@ -163,93 +160,6 @@ pw.Padding topOfInvoice(
           height: 30.h,
           width: 30.w,
         ),
-      //   pw.Expanded(
-      //     child: pw.Container(
-      //       height: 10.h,
-      //       decoration: const pw.BoxDecoration(
-      //         borderRadius: pw.BorderRadius.all(pw.Radius.circular(2)),
-      //         color: PdfColors.amberAccent,
-      //       ),
-      //       padding: const pw.EdgeInsets.only(
-      //         left: 40,
-      //         top: 10,
-      //         bottom: 10,
-      //         right: 40,
-      //       ),
-      //       alignment: pw.Alignment.centerLeft,
-      //       child: pw.DefaultTextStyle(
-      //         style: const pw.TextStyle(
-      //           color: PdfColors.amber100,
-      //           fontSize: 12,
-      //         ),
-      //         child: pw.GridView(
-      //           crossAxisCount: 2,
-      //           children: [
-      //             pw.Text(
-      //               'Customer:',
-      //               style: pw.TextStyle(
-      //                 fontSize: 10.sp,
-      //                 color: PdfColors.blue800,
-      //               ),
-      //             ),
-      //             pw.Text(
-      //               currentUser!.username!,
-      //               style: pw.TextStyle(
-      //                 fontSize: 10.sp,
-      //                 color: PdfColors.blue800,
-      //               ),
-      //             ),
-      //             pw.SizedBox(height: 1.h),
-      //             pw.Text(
-      //               'Email:',
-      //               style: pw.TextStyle(
-      //                 fontSize: 10.sp,
-      //                 color: PdfColors.blue800,
-      //               ),
-      //             ),
-      //             pw.SizedBox(height: 1.h),
-      //             pw.Text(
-      //               currentUser.email!,
-      //               style: pw.TextStyle(
-      //                 fontSize: 10.sp,
-      //                 color: PdfColors.blue800,
-      //               ),
-      //             ),
-      //             pw.SizedBox(height: 1.h),
-      //             pw.Text(
-      //               'Phone Number:',
-      //               style: pw.TextStyle(
-      //                 fontSize: 10.sp,
-      //                 color: PdfColors.blue800,
-      //               ),
-      //             ),
-      //             pw.Text(
-      //               currentUser.nomorTelepon!,
-      //               style: pw.TextStyle(
-      //                 fontSize: 10.sp,
-      //                 color: PdfColors.blue800,
-      //               ),
-      //             ),
-      //             pw.SizedBox(height: 1.h),
-      //             pw.Text(
-      //               'Origin:',
-      //               style: pw.TextStyle(
-      //                 fontSize: 10.sp,
-      //                 color: PdfColors.blue800,
-      //               ),
-      //             ),
-      //             pw.Text(
-      //               currentUser.origin!,
-      //               style: pw.TextStyle(
-      //                 fontSize: 10.sp,
-      //                 color: PdfColors.blue800,
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //     ),
-      //   ),
       ],
     ),
   );

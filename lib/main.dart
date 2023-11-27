@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_pbp/database/sql_helper.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,10 +10,11 @@ import 'package:hotel_pbp/view/main_screen.dart';
 import 'package:hotel_pbp/view/register_view.dart';
 
 void main() {
-  SQLHelper.db;
-  runApp(const ProviderScope(
+  runApp(
+    const ProviderScope(
       child: MainApp(),
-    ),);
+    ),
+  );
 }
 
 var themeMode = false;

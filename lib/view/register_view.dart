@@ -184,7 +184,7 @@ class _RegisterViewState extends State<RegisterView> {
                         Row(
                           children: [
                             Radio(
-                              value: 'Pria',
+                              value: 'Laki-Laki',
                               groupValue: _gender,
                               onChanged: (value) {
                                 setState(() {
@@ -199,7 +199,7 @@ class _RegisterViewState extends State<RegisterView> {
                         Row(
                           children: [
                             Radio(
-                                value: 'Wanita',
+                                value: 'Perempuan',
                                 groupValue: _gender,
                                 onChanged: (value) {
                                   setState(() {

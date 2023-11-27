@@ -3,15 +3,13 @@ import 'package:hotel_pbp/client/transaction_client.dart';
 import 'package:hotel_pbp/client/user_client.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-// import 'package:responsive_sizer/responsive_sizer.dart';
+//import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:uuid/uuid.dart';
 
-import '../database/sql_hotel_controller.dart';
 import '../event/input_hotel.dart';
 import 'package:hotel_pbp/pdf/pdf_view.dart';
-import 'package:hotel_pbp/model/user.dart';
-import 'package:hotel_pbp/repos/user_repo.dart';
-import 'package:hotel_pbp/global/user.dart';
+
+
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -23,7 +21,6 @@ class TransactionScreen extends StatefulWidget {
 class _TransactionScreenState extends State<TransactionScreen> {
   List<Map<String, dynamic>> hotelRoom = [];
   bool isFavorite = false;
-  User? _currentUser;
   String id = const Uuid().v1();
 
   void refresh() async {
@@ -48,13 +45,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
   void initState() {
     refresh();
     super.initState();
-  }
-
-  void initUser() async {
-    final u = await UserRepo.getUserById(currentUserID);
-    setState(() {
-      _currentUser = u;
-    });
   }
 
   @override
@@ -288,17 +278,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
     );
   }
 
-  Future<void> deleteHotel(int id) async {
-    await SQLHotelController.deleteHotel(id);
-    refresh();
-  }
-
   Container buttonCreatePDF(BuildContext context, int index) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 2),
       child: ElevatedButton(
         onPressed: () {
-          createPdf(_currentUser, id, context, hotelRoom[index]['name'],
+          createPdf(id, context, hotelRoom[index]['name'],
               hotelRoom[index]['price'], hotelRoom[index]['jumlah']);
           setState(() {
             const uuid = Uuid();

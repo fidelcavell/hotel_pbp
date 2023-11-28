@@ -3,7 +3,6 @@ import 'package:hotel_pbp/components/form_component.dart';
 import 'package:hotel_pbp/entity/user.dart';
 import 'package:hotel_pbp/view/login_view.dart';
 import 'package:hotel_pbp/client/user_client.dart';
-import 'package:hotel_pbp/entity/user.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});
@@ -32,7 +31,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               //confirm username
               inputForm((p0) {
                 if (p0 == null || p0.isEmpty) {
-                  return 'Username tidak boleh kosong';
+                  return 'Username tidak boleh kosong' ;
                 }
                 return null;
               },
@@ -73,24 +72,25 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               ),
 
               //re-confirm new password
-              inputForm((p0) {
-                if (p0 == null || p0.isEmpty) {
-                  return 'Password tidak boleh kosong';
-                } else if (p0 != passwordController.text) {
-                  return 'password tidak sama!!!';
-                }
-                return null;
-              },
-                  controller: conpasswordController,
-                  hintTxt: 'Password',
-                  helperTxt: 'Inputkan lagi password',
-                  iconData: Icons.password,
-                  togglePassword: GestureDetector(
-                    onTap: passwordVisibility,
-                    child: Icon(_showPassword
-                        ? Icons.visibility_off
-                        : Icons.visibility),
-                  )),
+              inputForm(
+                (p0) {
+                  if (p0 == null || p0.isEmpty) {
+                    return 'Password tidak boleh kosong';
+                  } else if (p0 != passwordController.text) {
+                    return 'password tidak sama!!!';
+                  }
+                  return null;
+                },
+                controller: conpasswordController,
+                hintTxt: 'Password',
+                helperTxt: 'Inputkan lagi password',
+                iconData: Icons.password,
+                togglePassword: GestureDetector(
+                  onTap: passwordVisibility,
+                  child: Icon(
+                      _showPassword ? Icons.visibility_off : Icons.visibility),
+                ),
+              ),
               const SizedBox(height: 20),
 
               Row(
@@ -99,23 +99,36 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        //bagian yang error
+                        //bagian yang fix
                         final List<User> users = await UserClient.fetchAll();
                         for (User user in users) {
                           if (user.username == usernameController.text &&
                               user.email == emailController.text) {
+                            User newData = User(
+                              id: user.id,
+                              username: user.username,
+                              email: user.email,
+                              password: passwordController.text,
+                              gender: user.gender,
+                              nomorTelepon: user.nomorTelepon,
+                              origin: user.origin,
+                              profilePicture: user.profilePicture,
+                            );
 
-                            //
+                            try {
+                              await UserClient.update(newData);
 
-                            //
+                              showSnackBar(context, 'Success', Colors.green);
+                              Navigator.pop(context);
+                            } catch (err) {
+                              showSnackBar(context, err.toString(), Colors.red);
+                              Navigator.pop(context);
+                            }
 
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const LoginView()));
+                           return;
                           }
-                          return;
                         }
+                        showSnackBar(context, 'Data user tidak ditemukan', Colors.red);
                       }
                     },
                     child: const Text('Change Password'),

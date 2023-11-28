@@ -2,8 +2,13 @@ import 'package:http/http.dart';
 import 'dart:convert';
 
 class TransactionClient {
-  static const String url = '10.0.2.2:8000'; // Kalo gak bisa coba 10.0.0.2:8000
+  // Url dan Endpoint Emulator :
+  static const String url = '10.0.2.2:8000'; 
   static const String endpoint = '/api/hotel';
+
+  // Url dan Endpoint Handphone :
+
+  //
 
   static Future<List<Map<String, dynamic>>> fetchAll() async {
     try {

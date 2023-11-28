@@ -44,3 +44,11 @@
 - Geraldi Jamin : barcode_widget
 - Jean Alexsander Caesar : intl
 - Thessalonica Angelina Meil : Responsive_sizer
+
+## UGD API :
+- Abrahm Bayudestar Ben Cedar : -
+- Fadhel Sitakka : -
+- Fidel Fausta Cavell : Login, Register, Tampil User API
+- Geraldi Jamin : Forgot Password
+- Jean Alexsander Caesar : Update Profile API
+- Thessalonica Angelina Meil : Proses CRUD API Hotel

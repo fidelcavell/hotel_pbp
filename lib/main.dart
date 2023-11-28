@@ -6,9 +6,6 @@ import 'package:hotel_pbp/view/login_view.dart';
 import 'package:hotel_pbp/themes/dark_mode.dart';
 import 'package:hotel_pbp/themes/light_mode.dart';
 
-import 'package:hotel_pbp/view/main_screen.dart';
-import 'package:hotel_pbp/view/register_view.dart';
-
 void main() {
   runApp(
     const ProviderScope(

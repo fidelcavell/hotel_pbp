@@ -6,8 +6,6 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:hotel_pbp/view/login_view.dart';
 import 'package:hotel_pbp/client/user_client.dart';
 import 'package:hotel_pbp/entity/user.dart';
-// import 'package:hotel_pbp/model/user.dart';
-// import 'package:hotel_pbp/repos/user_repo.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -34,7 +32,6 @@ class _RegisterViewState extends State<RegisterView> {
     void onSubmit() async {
       if (!_formKey.currentState!.validate()) return;
 
-      // Objek barang berdasarkan input :
       User input = User(
         id: id ?? 0,
         username: usernameController.text,
@@ -43,7 +40,7 @@ class _RegisterViewState extends State<RegisterView> {
         gender: _gender,
         nomorTelepon: int.parse(noTelpController.text),
         origin: originController.text,
-        profilePicture: 'pp',
+        profilePicture: 'none',
       );
 
       try {

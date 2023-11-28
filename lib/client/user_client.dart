@@ -5,8 +5,8 @@ import 'package:hotel_pbp/entity/user.dart';
 
 class UserClient {
   // Url and Endpoint Emulator :
-  static final String url = '10.0.2.2:8000';
-  static final String endpoint = '/api/customer';
+  static const String url = '10.0.2.2:8000';
+  static const String endpoint = '/api/customer';
 
   // Url and Endpoint Handphone :
 

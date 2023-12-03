@@ -8,7 +8,9 @@ import 'package:hotel_pbp/client/user_client.dart';
 import 'package:hotel_pbp/entity/user.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+  const LoginView({super.key, this.userClient});
+
+  final UserClient? userClient;
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -71,7 +73,8 @@ class _LoginViewState extends State<LoginView> {
                   ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        final List<User> users = await UserClient.fetchAll();
+                        final List<User> users =
+                            await widget.userClient!.fetchAll_T();
                         for (User user in users) {
                           if (user.username == usernameController.text &&
                               user.password == passwordController.text) {

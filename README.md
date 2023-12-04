@@ -52,3 +52,11 @@
 - Geraldi Jamin : Forgot Password
 - Jean Alexsander Caesar : Update Profile API
 - Thessalonica Angelina Meil : Proses CRUD API Hotel
+
+## UGD Unit Testing :
+- Abrahm Bayudestar Ben Cedar : Testing Register
+- Fadhel Sitakka : -
+- Fidel Fausta Cavell : Testing CRUD 
+- Geraldi Jamin : Testing Register
+- Jean Alexsander Caesar : Testing Login
+- Thessalonica Angelina Meil : Testing CRUD

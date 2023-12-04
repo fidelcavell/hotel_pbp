@@ -49,9 +49,9 @@ class _InputHotelState extends State<InputHotel> {
           children: [
             Stack(
               children: [
-                Image.asset(widget.id != null
-                    ? widget.assets!
-                    : 'assets/hotel$count.jpg'),
+                // Image.asset(widget.id != null
+                //     ? widget.assets!
+                //     : 'assets/hotel$count.jpg'),
                 SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),

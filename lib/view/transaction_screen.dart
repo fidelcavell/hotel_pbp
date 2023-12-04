@@ -9,10 +9,10 @@ import 'package:uuid/uuid.dart';
 import '../event/input_hotel.dart';
 import 'package:hotel_pbp/pdf/pdf_view.dart';
 
-
-
 class TransactionScreen extends StatefulWidget {
-  const TransactionScreen({super.key});
+  const TransactionScreen({super.key, this.transactionClient});
+
+  final TransactionClient? transactionClient;
 
   @override
   State<TransactionScreen> createState() => _TransactionScreenState();
@@ -24,7 +24,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   String id = const Uuid().v1();
 
   void refresh() async {
-    final data = await TransactionClient.fetchAll();
+    final data = await widget.transactionClient!.fetchAllTesting();
     setState(() {
       hotelRoom = data;
     });

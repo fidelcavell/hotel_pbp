@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_pbp/client/transaction_client.dart';
+import 'package:hotel_pbp/client/user_client.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+//import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:uuid/uuid.dart';
 
-import '../database/sql_hotel_controller.dart';
 import '../event/input_hotel.dart';
+import 'package:hotel_pbp/pdf/pdf_view.dart';
 
 class TransactionScreen extends StatefulWidget {
-  const TransactionScreen({super.key});
+  const TransactionScreen({super.key, this.transactionClient});
+
+  final TransactionClient? transactionClient;
 
   @override
   State<TransactionScreen> createState() => _TransactionScreenState();
@@ -13,12 +21,24 @@ class TransactionScreen extends StatefulWidget {
 class _TransactionScreenState extends State<TransactionScreen> {
   List<Map<String, dynamic>> hotelRoom = [];
   bool isFavorite = false;
+  String id = const Uuid().v1();
 
   void refresh() async {
-    final data = await SQLHotelController.getHotel();
+    final data = await widget.transactionClient!.fetchAllTesting();
     setState(() {
       hotelRoom = data;
     });
+  }
+
+  void getHotelById(int id) {
+    for (var i = 0; i < hotelRoom.length; i++) {
+      if (hotelRoom[i]['id'] == id) {
+        setState(() {
+          hotelRoom = [hotelRoom[i]];
+        });
+        return;
+      }
+    }
   }
 
   @override
@@ -63,15 +83,32 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   label: const Text('Add Hotel room'),
                 ),
                 IconButton(
+                    onPressed: () {
+                      refresh();
+                    },
+                    icon: const Icon(Icons.hotel)),
+                IconButton(
                   onPressed: () {
-                    setState(() {
-                      isFavorite = !isFavorite;
-                    });
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Container(
+                            margin: const EdgeInsets.all(16.0),
+                            child: MobileScanner(
+                              fit: BoxFit.fill,
+                              onDetect: (barcodes) {
+                                if (barcodes.barcodes.isEmpty) {
+                                  return;
+                                }
+                                getHotelById(int.parse(
+                                    barcodes.barcodes.first.rawValue!));
+                                Navigator.pop(context);
+                              },
+                            ),
+                          );
+                        });
                   },
-                  icon: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: Colors.red,
-                  ),
+                  icon: const Icon(Icons.qr_code_scanner),
                 ),
               ],
             ),
@@ -98,13 +135,37 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  hotelRoom[index]['name'],
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 30.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      hotelRoom[index]['name'],
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 30.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) => Container(
+                                                  margin: const EdgeInsets.all(
+                                                      16.0),
+                                                  child: Column(
+                                                    children: [
+                                                      const Text('QR Code'),
+                                                      QrImageView(
+                                                          data: hotelRoom[index]
+                                                                  ['id']
+                                                              .toString()),
+                                                    ],
+                                                  ),
+                                                ));
+                                      },
+                                      icon: const Icon(Icons.qr_code),
+                                    ),
+                                  ],
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -147,11 +208,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                 Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Row(
+                                  child: Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       ElevatedButton.icon(
+                                        key: const Key('editButtom'),
                                         style: ElevatedButton.styleFrom(
                                           foregroundColor: Colors.white,
                                           backgroundColor:
@@ -184,18 +246,21 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                       ),
                                       const SizedBox(width: 3.0),
                                       ElevatedButton.icon(
+                                        key: const Key('deleteButton'),
                                         style: ElevatedButton.styleFrom(
                                           foregroundColor: Colors.white,
                                           backgroundColor:
                                               Colors.red.withOpacity(0.5),
                                         ),
                                         onPressed: () async {
-                                          await deleteHotel(
+                                          await TransactionClient.deletee(
                                               hotelRoom[index]['id']);
+                                          refresh();
                                         },
                                         icon: const Icon(Icons.delete),
                                         label: const Text('Delete'),
                                       ),
+                                      buttonCreatePDF(context, index),
                                     ],
                                   ),
                                 ),
@@ -209,14 +274,33 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 );
               },
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  Future<void> deleteHotel(int id) async {
-    await SQLHotelController.deleteHotel(id);
-    refresh();
+  Container buttonCreatePDF(BuildContext context, int index) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 2),
+      child: ElevatedButton(
+        onPressed: () {
+          createPdf(id, context, hotelRoom[index]['name'],
+              hotelRoom[index]['price'], hotelRoom[index]['jumlah']);
+          setState(() {
+            const uuid = Uuid();
+            id = uuid.v1();
+          });
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.amber,
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+        ),
+        child: const Text('Create PDF'),
+      ),
+    );
   }
 }

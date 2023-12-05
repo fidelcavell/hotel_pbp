@@ -1,12 +1,18 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:hotel_pbp/components/form_component.dart';
-import 'package:hotel_pbp/database/sql_user_controller.dart';
-import 'package:hotel_pbp/global/user.dart';
+
+import 'package:hotel_pbp/view/forgot_password_screen.dart';
 import 'package:hotel_pbp/view/register_view.dart';
 import 'package:hotel_pbp/view/main_screen.dart';
+import 'package:hotel_pbp/client/user_client.dart';
+import 'package:hotel_pbp/entity/user.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+  const LoginView({super.key, this.userClient});
+
+  final UserClient? userClient;
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -17,7 +23,7 @@ var themeMode = false;
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool _showPassword = true;
 
@@ -27,109 +33,182 @@ class _LoginViewState extends State<LoginView> {
       body: SafeArea(
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Username :
-              inputForm((p0) {
-                if (p0 == null || p0.isEmpty) {
-                  return 'Username tidak boleh kosong';
-                }
-                return null;
-              },
-                  controller: usernameController,
-                  hintTxt: 'Username',
-                  helperTxt: 'Inputkan User yang telah didaftar',
-                  iconData: Icons.person),
-              // Password :
-              inputForm((p0) {
-                if (p0 == null || p0.isEmpty) {
-                  return 'Password tidak boleh kosong';
-                }
-                return null;
-              },
-                  onChanged: (p0) {},
-                  controller: passwordController,
-                  obscureText: _showPassword,
-                  hintTxt: 'Password',
-                  helperTxt: 'Inputkan Password yang telah didaftar',
-                  iconData: Icons.password,
-                  togglePassword: GestureDetector(
-                    onTap: passwordVisibility,
-                    child: Icon(_showPassword
-                        ? Icons.visibility_off
-                        : Icons.visibility),
-                  )),
-              const SizedBox(height: 20),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Login button :
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        SQLUserController.login(usernameController.text,
-                                passwordController.text)
-                            .then((id) {
-                          if (id != -1) {
-                            currentUserID = id;
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const MainScreen()),
-                            );
-                          } else {
-                            showDialog(
+                  const Center(
+                    child: Image(
+                      image: AssetImage('assets/logo.png'),
+                      width: 300,
+                      height: 300,
+                    ),
+                  ),
+                  //* Email Input Field :
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                    child: Text(
+                      'Email',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  TextFormField(
+                    key: const Key('Email'),
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.email),
+                        hintText: 'Your Email',
+                        border: OutlineInputBorder()),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Email is Required';
+                      }
+                      return null;
+                    },
+                  ),
+
+                  const SizedBox(height: 16),
+                  //* Password Input Field :
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                    child: Text(
+                      'Password',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  TextFormField(
+                    key: const Key('Password'),
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                        suffixIcon: GestureDetector(
+                            onTap: passwordVisibility,
+                            child: Icon(_showPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility)),
+                        prefixIcon: const Icon(Icons.password),
+                        hintText: 'Your Password',
+                        border: const OutlineInputBorder()),
+                    obscureText: _showPassword,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Password is Required';
+                      }
+                      if (value.length < 5) {
+                        return 'Password minimal 5 digit';
+                      }
+                      return null;
+                    },
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      //* Login button :
+                      SizedBox(
+                        width: 150,
+                        key: const Key('loginButton'),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              final List<User> users =
+                                  await UserClient.fetchAll();
+                              for (User user in users) {
+                                if (user.email == emailController.text &&
+                                    user.password == passwordController.text) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            MainScreen(id: user.id)),
+                                  );
+                                  showSnackBar(
+                                  context, 'Berhasil Login', Colors.green
+                                  );
+                                  return;
+                                }
+                              }
+
+                              showDialog(
                                 context: context,
                                 builder: (_) => AlertDialog(
-                                      title: const Text('Password Salah'),
-                                      content: TextButton(
-                                        onPressed: () => pushRegister(context),
-                                        child: const Text('Daftar disini !!'),
-                                      ),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, 'Cancel'),
-                                          child: const Text('Cancel'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, 'OK'),
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
-                                    ));
-                          }
-                        });
-                      }
-                    },
-                    child: const Text('Login'),
+                                  title: const Text('Password Salah'),
+                                  content: TextButton(
+                                    onPressed: () => pushRegister(context),
+                                    child: const Text('Daftar disini !!'),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, 'Cancel'),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, 'OK'),
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 226, 69, 51),
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text('Login'),
+                        ),
+                      ),
+                      //* Register or Sign up button :
+                      SizedBox(
+                        width: 150,
+                        child: TextButton(
+                          onPressed: () {
+                            Map<String, dynamic> formData = {};
+                            formData['password'] = passwordController.text;
+                            pushChangePassword(context);
+                          },
+                          child: const Text('Forget Password'),
+                        ),
+                      ),
+                    ],
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Map<String, dynamic> formData = {};
-                      formData['username'] = usernameController.text;
-                      formData['password'] = passwordController.text;
-                      pushRegister(context);
-                    },
-                    child: const Text('Belum punya akun?'),
+                  const SizedBox(height: 40.0),
+                  Center(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Map<String, dynamic> formData = {};
+                        formData['email'] = emailController.text;
+                        formData['password'] = passwordController.text;
+                        pushRegister(context);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: const Color.fromARGB(255, 226, 69, 51),
+                        side: const BorderSide(
+                          width: 2,
+                          color: Color.fromARGB(255, 226, 69, 51),
+                        ),
+                      ),
+                      child: const Text('Sign Up'),
+                    ),
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        // ga bisa ganti theme
-        onPressed: () {
-          setState(() {
-            themeMode = !themeMode;
-          });
-        },
-        child: Icon(themeMode ? Icons.nights_stay : Icons.wb_sunny),
       ),
     );
   }
@@ -148,4 +227,23 @@ class _LoginViewState extends State<LoginView> {
       _showPassword = !_showPassword;
     });
   }
+
+  void pushChangePassword(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_) => const ForgotPassword()));
+  }
+}
+
+void showSnackBar(BuildContext context, String message, Color background) {
+  final scaffold = ScaffoldMessenger.of(context);
+  scaffold.showSnackBar(
+    SnackBar(
+      content: Text(message),
+      backgroundColor: background,
+      action: SnackBarAction(
+        label: 'hide',
+        onPressed: scaffold.hideCurrentSnackBar,
+      ),
+    ),
+  );
 }

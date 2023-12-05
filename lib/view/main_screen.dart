@@ -16,7 +16,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   var currentScreen = 'Explore-screen';
 
-
   @override
   Widget build(buildContext) {
     Widget currentWidget = const ExploreScreen();
@@ -31,6 +30,7 @@ class _MainScreenState extends State<MainScreen> {
 
     return MaterialApp(
         home: Scaffold(
+      key: const Key('Mainscreen'),
       body: currentWidget,
       bottomNavigationBar: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),

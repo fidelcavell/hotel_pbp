@@ -109,4 +109,23 @@ class UserClient {
       return Future.error(e.toString());
     }
   }
+
+  static Future<User> login(String email, String password) async {
+    try {
+      var response = await post(Uri.http(url, '$endpoint/login'),
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({
+            "Email": email,
+            "password": password,
+          }));
+
+      if (response.statusCode != 200) throw Exception(response.body);
+
+      User loggedInUser = User.fromJson(json.decode(response.body)["data"]);
+
+      return loggedInUser;
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
 }

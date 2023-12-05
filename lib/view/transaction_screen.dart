@@ -213,6 +213,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       ElevatedButton.icon(
+                                        key: const Key('editButtom'),
                                         style: ElevatedButton.styleFrom(
                                           foregroundColor: Colors.white,
                                           backgroundColor:
@@ -245,6 +246,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                       ),
                                       const SizedBox(width: 3.0),
                                       ElevatedButton.icon(
+                                        key: const Key('deleteButton'),
                                         style: ElevatedButton.styleFrom(
                                           foregroundColor: Colors.white,
                                           backgroundColor:

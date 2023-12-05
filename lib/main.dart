@@ -48,20 +48,9 @@ class _MainAppState extends State<MainApp> {
               );
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: themeMode ? darkMode() : lightMode(),
-          home: Scaffold(
-            appBar: AppBar(
-              title: const Center(child: Text('Hotel PBP')),
-            ),
-            body: const LoginView(),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  themeMode = !themeMode;
-                });
-              },
-              child: Icon(themeMode ? Icons.nights_stay : Icons.wb_sunny),
-            ),
+          theme: ThemeData.light(),
+          home: const Scaffold(
+            body: LoginView(),
           ),
         );
       },

@@ -10,7 +10,9 @@ import 'package:hotel_pbp/entity/user.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+  const LoginView({super.key, this.userClient});
+
+  final UserClient? userClient;
 
   @override
   State<LoginView> createState() => _LoginViewState();

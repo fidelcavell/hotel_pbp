@@ -49,9 +49,9 @@ class _InputHotelState extends State<InputHotel> {
           children: [
             Stack(
               children: [
-                Image.asset(widget.id != null
-                    ? widget.assets!
-                    : 'assets/hotel$count.jpg'),
+                // Image.asset(widget.id != null
+                //     ? widget.assets!
+                //     : 'assets/hotel$count.jpg'),
                 SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
@@ -99,6 +99,7 @@ class _InputHotelState extends State<InputHotel> {
                   padding: const EdgeInsets.all(16),
                   children: [
                     TextFormField(
+                      key: const Key('Name'),
                       controller: controllerName,
                       decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.badge),
@@ -110,6 +111,7 @@ class _InputHotelState extends State<InputHotel> {
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
+                      key: const Key('Desc'),
                       controller: controllerDesc,
                       decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.description),
@@ -121,6 +123,7 @@ class _InputHotelState extends State<InputHotel> {
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
+                      key: const Key('Rating'),
                       controller: controllerRating,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
@@ -133,6 +136,7 @@ class _InputHotelState extends State<InputHotel> {
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
+                      key: const Key('Price'),
                       controller: controllerPrice,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
@@ -145,6 +149,7 @@ class _InputHotelState extends State<InputHotel> {
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
+                      key: const Key('Jumlah'),
                       controller: controllerJumlah,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
@@ -157,6 +162,7 @@ class _InputHotelState extends State<InputHotel> {
                     ),
                     const SizedBox(height: 48),
                     ElevatedButton(
+                      key: const Key('input'),
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
                           if (widget.id == null) {

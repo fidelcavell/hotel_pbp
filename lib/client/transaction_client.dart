@@ -3,12 +3,33 @@ import 'dart:convert';
 
 class TransactionClient {
   // Url dan Endpoint Emulator :
-  static const String url = '10.0.2.2:8000'; 
+  static const String url = '10.0.2.2:8000';
   static const String endpoint = '/api/hotel';
 
   // Url dan Endpoint Handphone :
 
   //
+
+  Future<List<Map<String, dynamic>>> fetchAllTesting() async {
+    try {
+      var response = await get(
+          Uri.http(
+            url,
+            endpoint,
+          ),
+          headers: {'Accept': 'application/json'});
+
+      if (response.statusCode != 200) {
+        throw Exception(response.reasonPhrase);
+      }
+
+      Iterable list = json.decode(response.body);
+
+      return list.map((e) => Map<String, dynamic>.from(e)).toList();
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
 
   static Future<List<Map<String, dynamic>>> fetchAll() async {
     try {

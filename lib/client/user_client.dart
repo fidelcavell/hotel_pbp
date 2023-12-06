@@ -29,6 +29,23 @@ class UserClient {
     }
   }
 
+// only for testing
+  Future<List<User>> fetchAll_T() async {
+    try {
+      var response = await get(Uri.http(url, endpoint));
+
+      if (response.statusCode != 200) {
+        throw Exception(response.reasonPhrase);
+      }
+      // Mengambil bagian data dari response body :
+      Iterable list = json.decode(response.body)['data'];
+
+      return list.map((e) => User.fromJson(e)).toList();
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
   // Mengambil data barang dari API berdasarkan Id :
   static Future<User> find(id) async {
     try {
@@ -110,4 +127,22 @@ class UserClient {
     }
   }
 
+  static Future<User> login(String email, String password) async {
+    try {
+      var response = await post(Uri.http(url, '$endpoint/login'),
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({
+            "Email": email,
+            "password": password,
+          }));
+
+      if (response.statusCode != 200) throw Exception(response.body);
+
+      User loggedInUser = User.fromJson(json.decode(response.body)["data"]);
+
+      return loggedInUser;
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
 }

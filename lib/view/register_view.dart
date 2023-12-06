@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
@@ -57,6 +59,7 @@ class _RegisterViewState extends State<RegisterView> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 175, 61, 49),
+          foregroundColor: Colors.white,
           title: const Text('Registration'),
         ),
         body: SafeArea(
@@ -70,6 +73,7 @@ class _RegisterViewState extends State<RegisterView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextFormField(
+                      key: const Key('Username'),
                       controller: usernameController,
                       decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.person),
@@ -84,6 +88,7 @@ class _RegisterViewState extends State<RegisterView> {
                     ),
                     const SizedBox(height: 18.0),
                     TextFormField(
+                      key: const Key('Email'),
                       controller: emailController,
                       decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.email),
@@ -112,6 +117,7 @@ class _RegisterViewState extends State<RegisterView> {
                     ),
                     const SizedBox(height: 18.0),
                     TextFormField(
+                      key: const Key('Password'),
                       controller: passwordController,
                       decoration: InputDecoration(
                           suffixIcon: GestureDetector(
@@ -135,6 +141,7 @@ class _RegisterViewState extends State<RegisterView> {
                     ),
                     const SizedBox(height: 18.0),
                     TextFormField(
+                      key: const Key('noTelp'),
                       controller: noTelpController,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
@@ -153,6 +160,7 @@ class _RegisterViewState extends State<RegisterView> {
                     ),
                     const SizedBox(height: 18.0),
                     TextFormField(
+                      key: const Key('Origin'),
                       controller: originController,
                       readOnly: true,
                       decoration: const InputDecoration(

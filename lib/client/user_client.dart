@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:hotel_pbp/entity/user.dart';
 
@@ -111,35 +110,4 @@ class UserClient {
     }
   }
 
-  static Future<User?> registerTesting({
-    required String username,
-    required String email,
-    required String password,
-    required String gender,
-    required String nomorTelepon,
-    required String origin,
-  }) async {
-    String apiUrl = 'http://127.0.0.1:8000/api/register';
-    try {
-      var apiResult = await http.post(
-        Uri.parse(apiUrl),
-        body: {
-          'username': username,
-          'password': password,
-          'email': email,
-          'gender': gender,
-          'nomorTelepon': nomorTelepon,
-          'origin': origin
-        },
-      );
-      if (apiResult.statusCode == 200) {
-        final result = User.fromRawJson(apiResult.body);
-        return result;
-      } else {
-        throw Exception('Failed to login');
-      }
-    } catch (e) {
-      return null;
-    }
-  }
 }

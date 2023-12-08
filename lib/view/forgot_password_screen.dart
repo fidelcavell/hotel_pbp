@@ -98,46 +98,49 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   },
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      //bagian yang fix
-                      final List<User> users = await UserClient.fetchAll();
-                      for (User user in users) {
-                        if (user.email == emailController.text) {
-                          User newData = User(
-                            id: user.id,
-                            username: user.username,
-                            email: user.email,
-                            password: passwordController.text,
-                            gender: user.gender,
-                            nomorTelepon: user.nomorTelepon,
-                            origin: user.origin,
-                            profilePicture: user.profilePicture,
-                          );
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        //bagian yang fix
+                        final List<User> users = await UserClient.fetchAll();
+                        for (User user in users) {
+                          if (user.email == emailController.text) {
+                            User newData = User(
+                              id: user.id,
+                              username: user.username,
+                              email: user.email,
+                              password: passwordController.text,
+                              gender: user.gender,
+                              nomorTelepon: user.nomorTelepon,
+                              origin: user.origin,
+                              profilePicture: user.profilePicture,
+                            );
 
-                          try {
-                            await UserClient.update(newData);
+                            try {
+                              await UserClient.update(newData);
 
-                            showSnackBar(context, 'Success', Colors.green);
-                            Navigator.pop(context);
-                          } catch (err) {
-                            showSnackBar(context, err.toString(), Colors.red);
-                            Navigator.pop(context);
+                              showSnackBar(context, 'Success', Colors.green);
+                              Navigator.pop(context);
+                            } catch (err) {
+                              showSnackBar(context, err.toString(), Colors.red);
+                              Navigator.pop(context);
+                            }
+
+                            return;
                           }
-
-                          return;
                         }
+                        showSnackBar(
+                            context, 'Data user tidak ditemukan', Colors.red);
                       }
-                      showSnackBar(
-                          context, 'Data user tidak ditemukan', Colors.red);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: const Color.fromARGB(255, 226, 69, 51),
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color.fromARGB(255, 226, 69, 51),
+                    ),
+                    child: const Text('Change Password'),
                   ),
-                  child: const Text('Change Password'),
                 ),
               ],
             ),

@@ -26,6 +26,7 @@ class _LoginViewState extends State<LoginView> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool _showPassword = true;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -110,83 +111,67 @@ class _LoginViewState extends State<LoginView> {
                   ),
 
                   const SizedBox(height: 20),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      //* Login button :
-                      SizedBox(
-                        width: 150,
-                        key: const Key('loginButton'),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              final List<User> users =
-                                  await UserClient.fetchAll();
-                              for (User user in users) {
-                                if (user.email == emailController.text &&
-                                    user.password == passwordController.text) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) =>
-                                            MainScreen(id: user.id)),
-                                  );
-                                  showSnackBar(
-                                  context, 'Berhasil Login', Colors.green
-                                  );
-                                  return;
-                                }
-                              }
-
-                              showDialog(
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                  title: const Text('Password Salah'),
-                                  content: TextButton(
-                                    onPressed: () => pushRegister(context),
-                                    child: const Text('Daftar disini !!'),
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, 'Cancel'),
-                                      child: const Text('Cancel'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, 'OK'),
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                ),
+                  SizedBox(
+                    width: double.infinity,
+                    key: const Key('loginButton'),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          // future delayed 2 seconds
+                          // await Future.delayed(const Duration(seconds: 2));
+                          final List<User> users = await UserClient.fetchAll();
+                          for (User user in users) {
+                            if (user.email == emailController.text &&
+                                user.password == passwordController.text) {
+                              showSnackBar(
+                                  context, 'Berhasil Login', Colors.green);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => MainScreen(id: user.id)),
                               );
+                              setState(() {
+                                _isLoading = false;
+                              });
+                              return;
                             }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 226, 69, 51),
-                            foregroundColor: Colors.white,
-                          ),
-                          child: const Text('Login'),
-                        ),
+                          }
+                          showSnackBar(context, "Username atau Password salah",
+                              Colors.red);
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 226, 69, 51),
+                        foregroundColor: Colors.white,
                       ),
-                      //* Register or Sign up button :
-                      SizedBox(
-                        width: 150,
-                        child: TextButton(
-                          onPressed: () {
-                            Map<String, dynamic> formData = {};
-                            formData['password'] = passwordController.text;
-                            pushChangePassword(context);
-                          },
-                          child: const Text('Forget Password'),
-                        ),
-                      ),
-                    ],
+                      child: _isLoading
+                          ? const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(),
+                            )
+                          : const Text('Login'),
+                    ),
                   ),
-                  const SizedBox(height: 40.0),
-                  Center(
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    child: const Center(
+                      child: Text(
+                        'Or',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
                     child: OutlinedButton(
                       onPressed: () {
                         Map<String, dynamic> formData = {};
@@ -204,6 +189,18 @@ class _LoginViewState extends State<LoginView> {
                       child: const Text('Sign Up'),
                     ),
                   ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextButton(
+                      onPressed: () {
+                        Map<String, dynamic> formData = {};
+                        formData['password'] = passwordController.text;
+                        pushChangePassword(context);
+                      },
+                      child: const Text('Forget Password',
+                          style: TextStyle(color: Colors.black)),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -238,12 +235,12 @@ void showSnackBar(BuildContext context, String message, Color background) {
   final scaffold = ScaffoldMessenger.of(context);
   scaffold.showSnackBar(
     SnackBar(
-      content: Text(message),
+      content: Center(child: Text(message)),
       backgroundColor: background,
-      action: SnackBarAction(
-        label: 'hide',
-        onPressed: scaffold.hideCurrentSnackBar,
-      ),
+      // action: SnackBarAction(
+      //   label: 'hide',
+      //   onPressed: scaffold.hideCurrentSnackBar,
+      // ),
     ),
   );
 }

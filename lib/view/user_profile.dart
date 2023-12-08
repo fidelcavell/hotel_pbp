@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_pbp/components/text_box.dart';
 import 'package:hotel_pbp/client/user_client.dart';
@@ -19,6 +20,7 @@ class _UserProfileState extends State<UserProfile> {
   late CameraController _controller;
   User? _currentUser;
   File? _profilePic;
+  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   void initState() {
@@ -90,39 +92,56 @@ class _UserProfileState extends State<UserProfile> {
       ),
       body: ListView(
         children: [
-          //progile pic
+          //profile pic
           TextButton(
             onPressed: () {
-              showBottomSheet(
-                  context: context,
-                  builder: (context) => Container(
-                        margin: const EdgeInsets.all(24),
-                        child: Stack(
-                          children: [
-                            CameraPreview(_controller),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: FloatingActionButton(
-                                onPressed: () async {
-                                  final image = await _controller.takePicture();
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                      leading: Icon(Icons.camera), // Camera icon
+                      title: Text('Take a Photo'),
+                      onTap: () async {
+                        Navigator.pop(context);
+                        final image = await _controller.takePicture();
 
-                                  // Bagian Update imagePath di database :
-                                  // SQLUserController.updateProfilePictureById(
-                                  //     currentUserID,
-                                  //     await convertImageToBase64(
-                                  //         File(image.path)));
-                                  setState(() {
-                                    _profilePic = File(image.path);
-                                  });
-                                  Navigator.pop(context);
-                                },
-                                child: const Icon(Icons.camera_alt),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ));
+                        // Update the profile picture in the database:
+                        // SQLUserController.updateProfilePictureById(
+                        //   currentUserID,
+                        //   await convertImageToBase64(File(image.path)),
+                        // );
+                        setState(() {
+                          _profilePic = File(image.path);
+                        });
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.photo_library), // Gallery icon
+                      title: Text('Choose from Gallery'),
+                      onTap: () async {
+                        Navigator.pop(context);
+                        final pickedFile =
+                            await _imagePicker.pickImage(source: ImageSource.gallery);
+
+                        if (pickedFile != null) {
+                          final image = File(pickedFile.path);
+
+                          // Update the profile picture in the database:
+                          // SQLUserController.updateProfilePictureById(
+                          //   currentUserID,
+                          //   await convertImageToBase64(image),
+                          // );
+                          setState(() {
+                            _profilePic = image;
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              );
             },
             child: CircleAvatar(
               radius: 96,

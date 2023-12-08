@@ -42,7 +42,7 @@ Future<void> createPdf(String id, BuildContext context, String name,
   );
 
   final List<CustomRow> elements = [
-    CustomRow('Item Name', 'Item Price', 'Amount', 'Sub Total Product'),
+    CustomRow('Room Type', 'Item Price', 'Amount', 'Sub Total Room'),
     CustomRow(
       name,
       pricee.toString(),
@@ -90,7 +90,7 @@ Future<void> createPdf(String id, BuildContext context, String name,
                 topOfInvoice(imageInvoice),
                 pw.SizedBox(height: 5.h),
 
-                contentOfInvoice(table),
+                contentOfInvoice(table, name),
 
                 // Barcode didalam document PDF :
                 barcodeKotak(id),
@@ -165,12 +165,12 @@ pw.Padding topOfInvoice(
   );
 }
 
-pw.Padding contentOfInvoice(pw.Widget table) {
+pw.Padding contentOfInvoice(pw.Widget table, String name) {
   return pw.Padding(
     padding: const pw.EdgeInsets.all(8.0),
     child: pw.Column(
       children: [
-        pw.Text('Dear Customer, Thank you for buying our hotel room, '),
+        pw.Text('Dear $name, Thank you for buying our hotel room, '),
         pw.SizedBox(height: 3.h),
         table, // Table yang sudah diatur tampilannya didalam file item_doc.dart
         pw.Text('Thanks for your trust, and till the next time.'),

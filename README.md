@@ -60,3 +60,5 @@
 - Geraldi Jamin : Testing Register
 - Jean Alexsander Caesar : Testing Login
 - Thessalonica Angelina Meil : Testing CRUD
+
+## ---

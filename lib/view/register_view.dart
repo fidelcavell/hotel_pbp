@@ -57,184 +57,185 @@ class _RegisterViewState extends State<RegisterView> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 175, 61, 49),
-          foregroundColor: Colors.white,
-          title: const Text('Registration'),
-        ),
-        body: SafeArea(
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.symmetric(
-                    horizontal: 20.0, vertical: 40.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextFormField(
-                      key: const Key('Username'),
-                      controller: usernameController,
-                      decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.person),
-                          hintText: 'Username',
-                          border: OutlineInputBorder()),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Username is Required';
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 230, 96, 81),
+        foregroundColor: Colors.white,
+        title: const Text('Registration'),
+      ),
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Container(
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextFormField(
+                    key: const Key('Username'),
+                    controller: usernameController,
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.person),
+                        hintText: 'Username',
+                        border: OutlineInputBorder()),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Username is Required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 18.0),
+                  TextFormField(
+                    key: const Key('Email'),
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.email),
+                        hintText: 'Email',
+                        border: OutlineInputBorder()),
+                    onChanged: (value) async {
+                      final List<User> users = await UserClient.fetchAll();
+                      for (User user in users) {
+                        if (user.email == emailController.text) {
+                          isEmailAvailable == false;
                         }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 18.0),
-                    TextFormField(
-                      key: const Key('Email'),
-                      controller: emailController,
-                      decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.email),
-                          hintText: 'Email',
-                          border: OutlineInputBorder()),
-                      onChanged: (value) async {
-                        final List<User> users = await UserClient.fetchAll();
-                        for (User user in users) {
-                          if (user.email == emailController.text) {
-                            isEmailAvailable == false;
-                          }
-                        }
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Email Tidak Boleh Kosong';
-                        }
-                        if (!value.contains('@')) {
-                          return 'Email harus menggunakan @';
-                        }
-                        if (!isEmailAvailable) {
-                          return 'Email sudah digunakan';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 18.0),
-                    TextFormField(
-                      key: const Key('Password'),
-                      controller: passwordController,
-                      decoration: InputDecoration(
-                          suffixIcon: GestureDetector(
-                              onTap: passwordVisibility,
-                              child: Icon(_showPassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility)),
-                          prefixIcon: const Icon(Icons.password),
-                          hintText: 'Password',
-                          border: const OutlineInputBorder()),
-                      obscureText: _showPassword,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Password is Required';
-                        }
-                        if (value.length < 5) {
-                          return 'Password minimal 5 digit';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 18.0),
-                    TextFormField(
-                      key: const Key('noTelp'),
-                      controller: noTelpController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.phone),
-                          hintText: 'Phone',
-                          border: OutlineInputBorder()),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Nomor telepon is required';
-                        }
-                        if (value.length < 10) {
-                          return 'Nomor telepon minimal 10 digit';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 18.0),
-                    TextFormField(
-                      key: const Key('Origin'),
-                      controller: originController,
-                      readOnly: true,
-                      decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.place),
-                          hintText: 'Origin - Tap me',
-                          border: OutlineInputBorder()),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Origin is required';
-                        }
-                        return null;
-                      },
-                      onTap: () async {
-                        Position currentLocation = await _determinePosition();
-                        final String address =
-                            await _getAddress(currentLocation);
-                        setState(() {
-                          originController.text = address;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 18.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Radio(
-                              value: 'Laki-Laki',
+                      }
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Email Tidak Boleh Kosong';
+                      }
+                      if (!value.contains('@')) {
+                        return 'Email harus menggunakan @';
+                      }
+                      if (!isEmailAvailable) {
+                        return 'Email sudah digunakan';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 18.0),
+                  TextFormField(
+                    key: const Key('Password'),
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                        suffixIcon: GestureDetector(
+                            onTap: passwordVisibility,
+                            child: Icon(_showPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility)),
+                        prefixIcon: const Icon(Icons.password),
+                        hintText: 'Password',
+                        border: const OutlineInputBorder()),
+                    obscureText: _showPassword,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Password is Required';
+                      }
+                      if (value.length < 5) {
+                        return 'Password minimal 5 digit';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 18.0),
+                  TextFormField(
+                    key: const Key('noTelp'),
+                    controller: noTelpController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.phone),
+                        hintText: 'Phone',
+                        border: OutlineInputBorder()),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Nomor telepon is required';
+                      }
+                      if (value.length < 10) {
+                        return 'Nomor telepon minimal 10 digit';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 18.0),
+                  TextFormField(
+                    key: const Key('Origin'),
+                    controller: originController,
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.place),
+                        hintText: 'Origin - Tap me',
+                        border: OutlineInputBorder()),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Origin is required';
+                      }
+                      return null;
+                    },
+                    onTap: () async {
+                      Position currentLocation = await _determinePosition();
+                      final String address = await _getAddress(currentLocation);
+                      setState(() {
+                        originController.text = address;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 18.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Radio(
+                            value: 'Laki-Laki',
+                            groupValue: _gender,
+                            onChanged: (value) {
+                              setState(() {
+                                _gender = value!;
+                              });
+                            },
+                          ),
+                          const Text('Laki-laki'),
+                        ],
+                      ),
+                      const SizedBox(width: 15.0),
+                      Row(
+                        children: [
+                          Radio(
+                              value: 'Perempuan',
                               groupValue: _gender,
                               onChanged: (value) {
                                 setState(() {
                                   _gender = value!;
                                 });
-                              },
-                            ),
-                            const Text('Laki-laki'),
-                          ],
+                              }),
+                          const Text('Perempuan'),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10.0),
+                  Center(
+                    child: SizedBox(
+                      width: 150,
+                      child: ElevatedButton(
+                        onPressed: onSubmit,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 230, 96, 81),
+                          foregroundColor: Colors.white,
                         ),
-                        const SizedBox(width: 15.0),
-                        Row(
-                          children: [
-                            Radio(
-                                value: 'Perempuan',
-                                groupValue: _gender,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _gender = value!;
-                                  });
-                                }),
-                            const Text('Perempuan'),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10.0),
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: onSubmit,
-                          child: const Text('Register'),
-                        ),
+                        child: const Text('Register'),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 
   void passwordVisibility() {

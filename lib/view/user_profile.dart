@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class _UserProfileState extends State<UserProfile> {
   late CameraController _controller;
   User? _currentUser;
   File? _profilePic;
+  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   void initState() {
@@ -83,46 +85,65 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 175, 61, 49),
+        backgroundColor: const Color.fromARGB(255, 230, 96, 81),
+        foregroundColor: Colors.white,
         title: const Center(
           child: Text('Profile'),
         ),
       ),
       body: ListView(
         children: [
-          //progile pic
+          //profile pic
+          const SizedBox(height: 20.0),
           TextButton(
             onPressed: () {
-              showBottomSheet(
-                  context: context,
-                  builder: (context) => Container(
-                        margin: const EdgeInsets.all(24),
-                        child: Stack(
-                          children: [
-                            CameraPreview(_controller),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: FloatingActionButton(
-                                onPressed: () async {
-                                  final image = await _controller.takePicture();
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                      leading: const Icon(Icons.camera), // Camera icon
+                      title: const Text('Take a Photo'),
+                      onTap: () async {
+                        Navigator.pop(context);
+                        final image = await _controller.takePicture();
 
-                                  // Bagian Update imagePath di database :
-                                  // SQLUserController.updateProfilePictureById(
-                                  //     currentUserID,
-                                  //     await convertImageToBase64(
-                                  //         File(image.path)));
-                                  setState(() {
-                                    _profilePic = File(image.path);
-                                  });
-                                  Navigator.pop(context);
-                                },
-                                child: const Icon(Icons.camera_alt),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ));
+                        // Update the profile picture in the database:
+                        // SQLUserController.updateProfilePictureById(
+                        //   currentUserID,
+                        //   await convertImageToBase64(File(image.path)),
+                        // );
+                        setState(() {
+                          _profilePic = File(image.path);
+                        });
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.photo_library), // Gallery icon
+                      title: const Text('Choose from Gallery'),
+                      onTap: () async {
+                        Navigator.pop(context);
+                        final pickedFile = await _imagePicker.pickImage(
+                            source: ImageSource.gallery);
+
+                        if (pickedFile != null) {
+                          final image = File(pickedFile.path);
+
+                          // Update the profile picture in the database:
+                          // SQLUserController.updateProfilePictureById(
+                          //   currentUserID,
+                          //   await convertImageToBase64(image),
+                          // );
+                          setState(() {
+                            _profilePic = image;
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              );
             },
             child: CircleAvatar(
               radius: 96,
@@ -132,43 +153,55 @@ class _UserProfileState extends State<UserProfile> {
                       as ImageProvider<Object>?,
             ),
           ),
-          const SizedBox(height: 10),
 
           const SizedBox(height: 50),
           //details
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Data diri',
-              style: TextStyle(color: Colors.grey[600]),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text(
+                    'Data diri',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                //email
+                TextBox(
+                  text: _currentUser?.username ?? 'User.username',
+                  sectionName: 'Username',
+                  onPressed: () => editField('Username'),
+                ),
+                //email
+                TextBox(
+                  text: _currentUser?.email ?? 'user@gmail.com',
+                  sectionName: 'Email',
+                  onPressed: () => editField('Email'),
+                ),
+                //password
+
+                //gender
+                TextBox(
+                  text: _currentUser?.gender ?? 'user.gender',
+                  sectionName: 'Gender',
+                  onPressed: () => editField('Gender'),
+                ),
+
+                //notelp
+                TextBox(
+                  text:
+                      _currentUser?.nomorTelepon.toString() ?? 'user.numPhone',
+                  sectionName: 'Nomor Telepon',
+                  onPressed: () => editField('Nomor Telepon'),
+                ),
+              ],
             ),
-          ),
-          //email
-          TextBox(
-            text: _currentUser?.username ?? 'User.username',
-            sectionName: 'Username',
-            onPressed: () => editField('Username'),
-          ),
-          //email
-          TextBox(
-            text: _currentUser?.email ?? 'user@gmail.com',
-            sectionName: 'Email',
-            onPressed: () => editField('Email'),
-          ),
-          //password
-
-          //gender
-          TextBox(
-            text: _currentUser?.gender ?? 'user.gender',
-            sectionName: 'Gender',
-            onPressed: () => editField('Gender'),
-          ),
-
-          //notelp
-          TextBox(
-            text: _currentUser?.nomorTelepon.toString() ?? 'user.numPhone',
-            sectionName: 'Nomor Telepon',
-            onPressed: () => editField('Nomor Telepon'),
           ),
         ],
       ),

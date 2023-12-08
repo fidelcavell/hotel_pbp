@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_pbp/view/option_type_room.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -75,15 +76,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const InputHotel(
-                      id: null,
-                      assets: null,
-                      desc: null,
-                      jumlah: null,
-                      name: null,
-                      price: null,
-                      rating: null,
-                    ),
+                    builder: (context) => const OptionTypeRoom(),
                   )).then((_) => refresh());
             },
             icon: const Icon(Icons.add),
@@ -117,226 +110,251 @@ class _TransactionScreenState extends State<TransactionScreen> {
       ),
       body: _loading
           ? const LoadingIndicator()
-          : ListView.builder(
-              itemCount: hotelRoom.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 4.0),
-                  child: Card(
-                    color: const Color.fromARGB(255, 230, 96, 81),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: SizedBox(
-                            height: 165,
-                            child: Image.asset(
-                              hotelRoom[index]['image'],
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+          : hotelRoom.isEmpty
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 100),
+                      child: const Text(
+                        'Tidak ada pesanan kamar',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(width: 16.0),
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        hotelRoom[index]['name'],
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          showModalBottomSheet(
-                                            context: context,
-                                            builder: (context) => Container(
-                                              margin:
-                                                  const EdgeInsets.all(16.0),
-                                              child: Column(
-                                                children: [
-                                                  const Text('QR Code'),
-                                                  QrImageView(
-                                                    data: hotelRoom[index]['id']
-                                                        .toString(),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        icon: const Icon(
-                                          Icons.qr_code,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          createPdf(
-                                            id,
-                                            context,
-                                            hotelRoom[index]['name'],
-                                            hotelRoom[index]['price'],
-                                            hotelRoom[index]['jumlah'],
-                                          );
-                                          setState(() {
-                                            const uuid = Uuid();
-                                            id = uuid.v1();
-                                          });
-                                        },
-                                        icon: const Icon(
-                                          Icons.picture_as_pdf_sharp,
-                                          color: Colors.white,
-                                        ),
-                                        tooltip: 'Create PDF',
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.star,
-                                        color: Colors.white,
-                                      ),
-                                      const SizedBox(width: 5.0),
-                                      Text(
-                                        hotelRoom[index]['rating'],
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 20.0),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                hotelRoom[index]['description'],
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12.0,
-                                ),
-                              ),
-                              const SizedBox(height: 8.0),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.attach_money_rounded,
-                                        color: Colors.white,
-                                      ),
-                                      Text(
-                                        hotelRoom[index]['price'],
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(width: 24.0),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.bed,
-                                        color: Colors.white,
-                                      ),
-                                      const SizedBox(width: 5.0),
-                                      Text(
-                                        hotelRoom[index]['jumlah'],
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                      const SizedBox(width: 5.0),
-                                      const Text(
-                                        'Room',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Row(
-                                  children: [
-                                    ElevatedButton.icon(
-                                      key: const Key('editButton'),
-                                      style: ElevatedButton.styleFrom(
-                                        foregroundColor: Colors.white,
-                                        backgroundColor: const Color.fromARGB(
-                                            255, 223, 209, 86),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => InputHotel(
-                                                  id: hotelRoom[index]['id'],
-                                                  assets: hotelRoom[index]
-                                                      ['image'],
-                                                  name: hotelRoom[index]
-                                                      ['name'],
-                                                  desc: hotelRoom[index]
-                                                      ['description'],
-                                                  rating: hotelRoom[index]
-                                                      ['rating'],
-                                                  price: hotelRoom[index]
-                                                      ['price'],
-                                                  jumlah: hotelRoom[index]
-                                                      ['jumlah']),
-                                            )).then((_) => refresh());
-                                      },
-                                      icon: const Icon(Icons.update),
-                                      label: const Text(
-                                        'Update',
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 5.0),
-                                    ElevatedButton.icon(
-                                      key: const Key('deleteButton'),
-                                      style: ElevatedButton.styleFrom(
-                                        foregroundColor: Colors.white,
-                                        backgroundColor:
-                                            Colors.red.withOpacity(0.5),
-                                      ),
-                                      onPressed: () async {
-                                        await TransactionClient.deletee(
-                                            hotelRoom[index]['id']);
-                                        refresh();
-                                      },
-                                      icon: const Icon(Icons.delete),
-                                      label: const Text(
-                                        'Delete',
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
+                  ],
+                )
+              : ListView.builder(
+                  itemCount: hotelRoom.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 10.0, vertical: 4.0),
+                      child: Card(
+                        color: const Color.fromARGB(255, 230, 96, 81),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: SizedBox(
+                                height: 165,
+                                child: Image.asset(
+                                  hotelRoom[index]['image'],
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 16.0),
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            hotelRoom[index]['name'],
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              showModalBottomSheet(
+                                                context: context,
+                                                builder: (context) => Container(
+                                                  margin: const EdgeInsets.all(
+                                                      16.0),
+                                                  child: Column(
+                                                    children: [
+                                                      const Text('QR Code'),
+                                                      QrImageView(
+                                                        data: hotelRoom[index]
+                                                                ['id']
+                                                            .toString(),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            icon: const Icon(
+                                              Icons.qr_code,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              createPdf(
+                                                id,
+                                                context,
+                                                hotelRoom[index]['name'],
+                                                hotelRoom[index]['price'],
+                                                hotelRoom[index]['jumlah'],
+                                              );
+                                              setState(() {
+                                                const uuid = Uuid();
+                                                id = uuid.v1();
+                                              });
+                                            },
+                                            icon: const Icon(
+                                              Icons.picture_as_pdf_sharp,
+                                              color: Colors.white,
+                                            ),
+                                            tooltip: 'Create PDF',
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.star,
+                                            color: Colors.white,
+                                          ),
+                                          const SizedBox(width: 5.0),
+                                          Text(
+                                            hotelRoom[index]['rating'],
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20.0),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    hotelRoom[index]['description'],
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.0,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.attach_money_rounded,
+                                            color: Colors.white,
+                                          ),
+                                          Text(
+                                            hotelRoom[index]['price'],
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 24.0),
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.bed,
+                                            color: Colors.white,
+                                          ),
+                                          const SizedBox(width: 5.0),
+                                          Text(
+                                            hotelRoom[index]['jumlah'],
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                          const SizedBox(width: 5.0),
+                                          const Text(
+                                            'Room',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    child: Row(
+                                      children: [
+                                        ElevatedButton.icon(
+                                          key: const Key('editButton'),
+                                          style: ElevatedButton.styleFrom(
+                                            foregroundColor: Colors.white,
+                                            backgroundColor:
+                                                const Color.fromARGB(
+                                                    255, 223, 209, 86),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      InputHotel(
+                                                          id: hotelRoom[index]
+                                                              ['id'],
+                                                          assets:
+                                                              hotelRoom[index]
+                                                                  ['image'],
+                                                          name: hotelRoom[index]
+                                                              ['name'],
+                                                          desc: hotelRoom[index]
+                                                              ['description'],
+                                                          rating:
+                                                              hotelRoom[index]
+                                                                  ['rating'],
+                                                          price:
+                                                              hotelRoom[index]
+                                                                  ['price'],
+                                                          jumlah:
+                                                              hotelRoom[index]
+                                                                  ['jumlah']),
+                                                )).then((_) => refresh());
+                                          },
+                                          icon: const Icon(Icons.update),
+                                          label: const Text(
+                                            'Update',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 5.0),
+                                        ElevatedButton.icon(
+                                          key: const Key('deleteButton'),
+                                          style: ElevatedButton.styleFrom(
+                                            foregroundColor: Colors.white,
+                                            backgroundColor:
+                                                Colors.red.withOpacity(0.5),
+                                          ),
+                                          onPressed: () async {
+                                            await TransactionClient.deletee(
+                                                hotelRoom[index]['id']);
+                                            refresh();
+                                          },
+                                          icon: const Icon(Icons.delete),
+                                          label: const Text(
+                                            'Delete',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
     );
   }
 }

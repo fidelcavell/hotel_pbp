@@ -6,7 +6,7 @@ import 'package:hotel_pbp/components/image_carousel.dart';
 import 'package:hotel_pbp/components/model/facilities.dart';
 import 'package:hotel_pbp/components/model/services.dart';
 import 'package:hotel_pbp/components/facilities/facilities_list.dart';
-import 'package:hotel_pbp/components/services/services.list.dart';
+import 'package:hotel_pbp/components/services/services_list.dart';
 import 'package:hotel_pbp/view/review_screen.dart';
 import 'package:hotel_pbp/components/loading_indicator.dart';
 

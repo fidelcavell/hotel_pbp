@@ -29,6 +29,7 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
         home: Scaffold(
       key: const Key('Mainscreen'),
       body: currentWidget,

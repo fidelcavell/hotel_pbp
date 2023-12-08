@@ -11,7 +11,12 @@ class ServicesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemBuilder: (context, index) => ServiceCard(services: services[index]),
+      itemBuilder: (context, index) => InkWell(
+        onTap: () {
+          
+        },
+        child: ServiceCard(services: services[index]),
+      ),
       itemCount: services.length,
     );
   }

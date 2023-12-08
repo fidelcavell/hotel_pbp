@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_pbp/components/facilities/facilities_list.dart';
+import 'package:hotel_pbp/components/model/facilities.dart';
+import 'package:hotel_pbp/components/model/services.dart';
 import 'package:shake/shake.dart';
+
+import 'package:hotel_pbp/components/image_carousel.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -9,29 +14,41 @@ class ExploreScreen extends StatefulWidget {
 }
 
 class _ExploreScreenState extends State<ExploreScreen> {
-  final int _cells = 10;
-  final double _containerSizeSmall = 170;
-  final double _containerheightSizeLarge = 250;
-  final double _containerWidthSizeLarge = 360;
-  int _clicked = 0;
-
-  final List<String> _imagePaths = [
-    'assets/hotel1.jpg',
-    'assets/hotel2.jpg',
-    'assets/hotel3.jpg',
-    'assets/hotel4.jpg',
-    'assets/hotel5.jpg',
-    'assets/hotel6.jpg',
-    'assets/hotel7.jpg',
-    'assets/hotel8.jpg',
-    'assets/hotel9.jpg',
-    'assets/hotel10.jpg',
+  List<Facilities> facilities = [
+    Facilities(
+      icon: Icons.ac_unit,
+      description: 'AC',
+    ),
+    Facilities(
+      icon: Icons.restaurant,
+      description: 'Restaurant',
+    ),
+    Facilities(
+      icon: Icons.pool,
+      description: 'Swim Pool',
+    ),
+    Facilities(
+      icon: Icons.fitness_center,
+      description: 'Gym',
+    ),
+    Facilities(
+      icon: Icons.map_outlined,
+      description: 'Strategic',
+    ),
+    Facilities(
+      icon: Icons.local_parking,
+      description: 'Parking',
+    ),
+    Facilities(
+      icon: Icons.wifi,
+      description: 'Wifi',
+    ),
   ];
 
   @override
   void initState() {
     super.initState();
-     ShakeDetector detector = ShakeDetector.autoStart(
+    ShakeDetector detector = ShakeDetector.autoStart(
       onPhoneShake: () {
         // Show a pop-up dialog to contact customer service
         showDialog(
@@ -74,57 +91,59 @@ class _ExploreScreenState extends State<ExploreScreen> {
           child: Text('Explore'),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Padding(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          children: [
+            const SizedBox(height: 20.0),
+            const ImageCarousel(),
+            Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-              child: SingleChildScrollView(
-                child: SizedBox(
-                  width: 700,
-                  child: Wrap(
-                    spacing: 5,
-                    children: List.generate(
-                      _cells,
-                      (col) => Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 12),
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _clicked != col + 1
-                                    ? _clicked = col + 1
-                                    : _clicked = 0;
-                              });
-                            },
-                            child: SizedBox(
-                              height: _clicked == col + 1
-                                  ? _containerheightSizeLarge
-                                  : _containerSizeSmall,
-                              width: _clicked == col + 1
-                                  ? _containerWidthSizeLarge
-                                  : _containerSizeSmall,
-                              child: _clicked == col + 1
-                                  ? Image.asset(
-                                      _imagePaths[col % _imagePaths.length],
-                                    )
-                                  : Center(
-                                      child: Image.asset(
-                                        _imagePaths[col % _imagePaths.length],
-                                      ),
-                                    ),
-                            ),
-                          ),
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Atma Hotel',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
+                      Row(
+                        children: [
+                          Icon(Icons.star_border_rounded),
+                          Text(
+                            '5.0',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const Text(
+                      'Rasakan kemewahan dan kenyamanan menginap dengan nuansa khas Yogyakarta yang memberikan kenangan tak terlupakan.'),
+                  const SizedBox(height: 16.0),
+                  const Text(
+                    'Facilitiess',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
+                  Expanded(
+                    child: FacilitiesList(facilities: facilities),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -200,6 +200,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                                 hotelRoom[index]['name'],
                                                 hotelRoom[index]['price'],
                                                 hotelRoom[index]['jumlah'],
+                                                hotelRoom[index]['description']
                                               );
                                               setState(() {
                                                 const uuid = Uuid();

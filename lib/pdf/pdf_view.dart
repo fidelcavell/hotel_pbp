@@ -14,7 +14,7 @@ import 'package:hotel_pbp/invoice/model/hotel_room.dart';
 import 'package:hotel_pbp/pdf/preview_screen.dart';
 
 Future<void> createPdf(String id, BuildContext context, String name,
-    String price, String jumlah) async {
+    String price, String jumlah, String desc) async {
   final doc = pw.Document();
   final now = DateTime.now();
   final formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
@@ -90,7 +90,7 @@ Future<void> createPdf(String id, BuildContext context, String name,
                 topOfInvoice(imageInvoice),
                 pw.SizedBox(height: 5.h),
 
-                contentOfInvoice(table, name),
+                contentOfInvoice(table, desc),
 
                 // Barcode didalam document PDF :
                 barcodeKotak(id),
@@ -165,12 +165,12 @@ pw.Padding topOfInvoice(
   );
 }
 
-pw.Padding contentOfInvoice(pw.Widget table, String name) {
+pw.Padding contentOfInvoice(pw.Widget table, String desc) {
   return pw.Padding(
     padding: const pw.EdgeInsets.all(8.0),
     child: pw.Column(
       children: [
-        pw.Text('Dear $name, Thank you for buying our hotel room, '),
+        pw.Text('Dear $desc, Thank you for buying our hotel room, '),
         pw.SizedBox(height: 3.h),
         table, // Table yang sudah diatur tampilannya didalam file item_doc.dart
         pw.Text('Thanks for your trust, and till the next time.'),

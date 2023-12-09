@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:hotel_pbp/components/text_box.dart';
 import 'package:hotel_pbp/client/user_client.dart';
 import 'package:hotel_pbp/entity/user.dart';
+import 'package:hotel_pbp/view/login_view.dart';
 
 class UserProfile extends StatefulWidget {
   UserProfile({required this.id, super.key});
@@ -90,6 +91,19 @@ class _UserProfileState extends State<UserProfile> {
         title: const Center(
           child: Text('Profile'),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const LoginView(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.logout_rounded),
+          ),
+        ],
       ),
       body: ListView(
         children: [

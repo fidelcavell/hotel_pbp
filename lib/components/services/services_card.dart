@@ -35,9 +35,10 @@ class ServiceCard extends StatelessWidget {
                     Text(
                       services.title,
                       style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                     Text(
                       services.description,

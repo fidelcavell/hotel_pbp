@@ -45,6 +45,7 @@ class OptionTypeRoom extends StatelessWidget {
                   builder: (_) => RoomDetail(
                     type: services[index].title,
                     imagePath: services[index].imagePath,
+                    description: services[index].description,
                   ),
                 ),
               );

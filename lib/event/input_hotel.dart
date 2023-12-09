@@ -103,7 +103,6 @@ class _InputHotelState extends State<InputHotel> {
                           value == '' ? 'Please enter Quantity (night)' : null,
                     ),
                     const SizedBox(height: 48),
-                    size
                     ElevatedButton(
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {

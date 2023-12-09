@@ -181,7 +181,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Atma Hotel',
+                              'Hotel Tour',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 24,
